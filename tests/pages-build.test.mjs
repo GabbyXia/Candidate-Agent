@@ -54,6 +54,8 @@ test('Pages build retains the complete dated research snapshot and works below a
     const pilot = await readJson(new URL('data/academic-research.json', projectRoot));
     const proposals = bootstrap.candidates.filter(candidate => candidate.academicResearch);
     assert.equal(proposals.length, 4);
+    assert.equal(result.researchedProfiles, 4);
+    assert.equal(bootstrap.publication.researchedProfiles, 4);
     for (const candidate of proposals) {
       assert.deepEqual(candidate.academicResearch, pilot.profiles.find(profile => profile.candidateId === candidate.id));
       assert.equal(candidate.academicProfile, undefined);

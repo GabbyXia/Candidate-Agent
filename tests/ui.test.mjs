@@ -72,17 +72,18 @@ test('initial workspace loads source-backed papers and keeps academic status unk
   assert.ok(ui.json('state.candidates.every(c=>!c.isSample&&c.gradYear===null&&c.status==="Unknown")'));
   assert.equal(ui.json('state.papers.length'),3);
   assert.equal(ui.json('state.loading'),false);
-  assert.equal(ui.json('state.tab'),'students');assert.match(ui.node('results').innerHTML,/No cited current-student leads/);
+  assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('matchList().length'),3);assert.ok(ui.node('results').innerHTML.includes(sourceAuthors[0].name));
 });
 
 test('full production bootstrap hydrates every paper and thousands of author records into the UI',async()=>{
   const networking=JSON.parse(await readFile(new URL('../data/networking.json',import.meta.url),'utf8'));
   const snapshot={papers:[...usenix.papers,...networking.papers],editions:[...usenix.coverage,...networking.coverage],warnings:[...usenix.warnings,...networking.warnings],retrievedAt:usenix.retrievedAt};
-  const data=await (await handleApi(new Request('https://app.test/api/bootstrap'),{SOURCE_SNAPSHOT:snapshot})).json();
+  const data=await (await handleApi(new Request('https://app.test/api/bootstrap'),{SOURCE_SNAPSHOT:snapshot,ACADEMIC_RESEARCH_SNAPSHOT:academicPilot})).json();
   const indexedDB=memoryIndexedDB();const ui=await app({bootstrap:data,indexedDB});
   assert.equal(ui.json('state.papers.length'),snapshot.papers.length);
   assert.equal(ui.json('state.candidates.length'),data.candidates.length);
   assert.ok(ui.json('state.candidates.length')>6000);
+  assert.equal(ui.json('state.candidates.length'),6847);assert.equal(ui.json('matchList().length'),6847);assert.equal(ui.json('state.candidates.filter(c=>appDisplayProgram(c).category==="source_stated").length'),2);assert.equal(ui.json('state.candidates.filter(c=>appCurrentProgram(c).category==="source_stated").length'),0);assert.match(ui.node('pipeline').innerHTML,/2024/);assert.match(ui.run('dashboard()'),/Current program starts|Cited program start years/);assert.doesNotMatch(ui.run('dashboard()'),/Student leads|Reviewed starts|audit\/review/);
   assert.ok(ui.json('state.candidates.every(c=>c.papers.length===c.paperIds.length)'));
   assert.ok(ui.json('state.candidates.every(c=>c.status==="Unknown"&&c.gradYear===null)'));
   assert.match(ui.node('landscape').innerHTML,/Author records in the current view aggregated/);
@@ -151,7 +152,7 @@ test('cache write failure preserves recruiter evidence in small local preference
 });
 
 test('current-program cohort never uses legacy graduation ranges or publication dates',async()=>{
- const ui=await app();assert.equal(ui.run('target({gradYear:2027,gradRange:[2026,2027]})'),false);assert.equal(ui.run('rangeText({gradYear:2027,startYear:2022,degree:"PhD"})'),'Unknown');ui.run("state.tab='next'");assert.equal(ui.json('matchList().length'),0);assert.doesNotMatch(ui.run('dashboard()'),/Estimated graduation|EST. GRADUATION/);
+ const ui=await app();assert.equal(ui.run('target({gradYear:2027,gradRange:[2026,2027]})'),false);assert.equal(ui.run('rangeText({gradYear:2027,startYear:2022,degree:"PhD"})'),'Unknown');ui.run("state.programStart='cited'");assert.equal(ui.json('matchList().length'),0);assert.doesNotMatch(ui.run('dashboard()'),/Estimated graduation|EST. GRADUATION/);
 });
 
 test('search combines affiliation, expertise, status, conference and alignment filters',async()=>{
@@ -292,4 +293,12 @@ test('ambiguous identity, unsupported fields, and missing citations cannot enter
 
 test('active table and cited-year filter show unreviewed current-program evidence without accepting it',async()=>{
  const ui=await app({bootstrap:academicFixture()});assert.match(ui.run('table(state.candidates)'),/CURRENT PROGRAM START/);assert.doesNotMatch(ui.run('table(state.candidates)'),/EST. GRADUATION|NEXT YEAR/);assert.equal(ui.run('appProgramText(state.candidates[0])'),'2024 · unreviewed');assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),null);ui.run("state.programStart='cited'");assert.equal(ui.json('matchList().length'),1);assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.json('state.candidates[0].gradYear'),null);
+});
+
+test('faculty, unknown and unresearched authors remain visible in the initial all-author view',async()=>{
+ const data=fixture();data.candidates[0].status='Faculty';data.candidates[1].status='Unknown';data.candidates[2].status='Researcher';const ui=await app({bootstrap:data});assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('state.programStart'),'all');assert.equal(ui.json('state.status'),'all');assert.equal(ui.json('matchList().length'),3);ui.click('tab',{tab:'saved'});ui.click('reset-filters');assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('matchList().length'),3);
+});
+
+test('program-start metric and chart clicks use cited display dates without accepting proposal facts',async()=>{
+ const data=academicFixture(),ui=await app({bootstrap:data});assert.equal(ui.run('appDisplayProgram(state.candidates[0]).programStartYear'),2024);assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),null);assert.match(ui.node('pipeline').innerHTML,/2024/);ui.click('metric',{metric:'programStart'});assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('state.programStart'),'cited');assert.equal(ui.json('matchList().length'),1);ui.click('year',{year:'2024'});assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('state.programStart'),'2024');assert.equal(ui.json('matchList().length'),1);assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.run('Boolean(state.candidates[0].academicProfile)'),false);
 });

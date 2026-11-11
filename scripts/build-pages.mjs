@@ -74,7 +74,8 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
   // live app's freshness window. Do not mark the archived findings as reviewed.
   const proposals = new Map((pilot.profiles || []).map(profile => [profile.candidateId, profile]));
   for (const candidate of bootstrap.candidates) if (proposals.has(candidate.id)) candidate.academicResearch = proposals.get(candidate.id);
-  bootstrap.publication = { publishedAt, sourceRetrievedAt: bootstrap.coverage?.retrievedAt || sourceSnapshot.retrievedAt || null, mode: 'static_snapshot' };
+  const researchedProfiles = bootstrap.candidates.filter(candidate => candidate.academicResearch?.candidateId === candidate.id).length;
+  bootstrap.publication = { publishedAt, sourceRetrievedAt: bootstrap.coverage?.retrievedAt || sourceSnapshot.retrievedAt || null, mode: 'static_snapshot', researchedProfiles };
   bootstrap.criteria = { ...(bootstrap.criteria || {}), dateMode: 'current_program_start', programStartYearFrom: null, programStartYearTo: null, targetGraduationYear: null };
 
   await prepareOutput(output, root);
@@ -107,12 +108,12 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
     const href = path + '?v=' + createHash('sha256').update(content).digest('hex').slice(0, 16);
     artifacts.push({ title, description, href, filename, type, bytes: Buffer.byteLength(content) });
   }
-  await artifact('talent-atlas-snapshot.json', 'Complete research snapshot', `${bootstrap.papers.length.toLocaleString('en-US')} papers and ${bootstrap.candidates.length.toLocaleString('en-US')} provisional author profiles, with source coverage and dated research proposals.`, json(bootstrap), 'JSON');
+  await artifact('talent-atlas-snapshot.json', 'Complete proceedings snapshot', `${bootstrap.papers.length.toLocaleString('en-US')} papers, ${bootstrap.candidates.length.toLocaleString('en-US')} provisional author records, and ${researchedProfiles.toLocaleString('en-US')} researched profiles. Source coverage and review state are retained.`, json(bootstrap), 'JSON');
   const context = { TextEncoder, URL };
   vm.runInNewContext(currentProgram + '\n' + await readFile(resolve(ui, 'mapping-export.js'), 'utf8'), context, { filename: 'mapping-export.js' });
   const workbook = context.buildMappingWorkbook(bootstrap, { id: 'published-snapshot', state: 'published_snapshot', stage: 'export_ready', createdAt: publishedAt, updatedAt: publishedAt, input: { role: bootstrap.coverage?.role, keywords: 'network, networking, congestion, routing, transport, datacenter' } });
   await artifact('talent-atlas-research.xlsx', 'Research workbook', 'All published profiles, papers, source citations, coverage, and review status in an Excel workbook.', Buffer.from(workbook), 'XLSX');
-  await artifact('academic-research.json', 'Academic research pilot', 'Four dated, source-cited academic profile proposals. Findings remain unreviewed.', json(pilot), 'JSON');
+  await artifact('academic-research.json', 'Academic research pilot', `${researchedProfiles.toLocaleString('en-US')} dated, source-cited academic profile proposals. Findings remain unreviewed.`, json(pilot), 'JSON');
   await artifact('source-plans.json', 'Published source plans', 'Checked-in source plan versions and their original validation evidence.', json(sourcePlans), 'JSON');
   for (const entry of additions) await artifact(entry.filename, entry.title, entry.description, entry.content, entry.type, 'downloads/published');
   const snapshotVersion = createHash('sha256').update(json(bootstrap)).digest('hex').slice(0, 16);
@@ -142,5 +143,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     options[arg === '--output' ? 'outputDir' : 'publishedAt'] = value;
   }
   const result = await buildPages(options);
-  console.log(`Built GitHub Pages snapshot: ${result.papers} papers, ${result.candidates} profiles, ${result.artifacts.length} downloads in ${result.outputDir}`);
+  console.log(`Built GitHub Pages snapshot: ${result.papers} papers, ${result.candidates} author records, ${result.researchedProfiles} researched profiles, ${result.artifacts.length} downloads in ${result.outputDir}`);
 }

@@ -14,6 +14,10 @@ The Downloads screen includes the complete JSON snapshot, Excel workbook, academ
 research pilot, and validated source plans. Proposals retain their original source
 dates and review state; rebuilding does not imply fresh research.
 
+The directory opens with all collected author records. The publication separately
+reports how many records have academic profile research; missing profile evidence
+does not remove an author from the directory. Optional filters narrow the display.
+
 The interface and default Excel export use the first enrollment year of the
 current degree program. Cited proposal dates remain labeled unreviewed; missing
 or unsupported dates remain Unknown. Historical graduation fields can remain in
