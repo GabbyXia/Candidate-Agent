@@ -1,0 +1,23 @@
+{
+  "name": "talent-atlas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
+    "dev": "node scripts/dev.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate-artifact.mjs",
+    "collect:usenix": "node scripts/collect-usenix.mjs",
+    "collect:networking": "node scripts/collect-networking.mjs",
+    "verify:sources": "node scripts/verify-sources.mjs",
+    "db:generate": "drizzle-kit generate"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.31.11",
+    "drizzle-orm": "0.45.4"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "schemaVersion": 1,
+  "selectionMethod": "First four canonical author IDs in lexicographic order; no demographic selection",
+  "queriedAt": "2026-11-11T01:05:22Z",
+  "profiles": [
+    {
+      "candidateId": "author:001aecaf95a500e3",
+      "identity": {
+        "status": "matched",
+        "confidence": "high",
+        "matchedPaperIds": [
+          "usenix:osdi:2025:zheng-yusheng"
+        ],
+        "sourceIds": [
+          "yusheng-about",
+          "yusheng-cv",
+          "yusheng-osdi-paper"
+        ],
+        "rationale": "The personal CV names the exact OSDI2025 paper and advisor/coauthor Andi Quinn. The personal research page describes bpftime as the basis of that paper, matching the publisher title, author, affiliation, and coauthor evidence."
+      },
+      "academic": {
+        "currentAffiliation": {
+          "value": "University of California, Santa Cruz",
+          "sourceIds": [
+            "yusheng-about",
+            "yusheng-cv"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "currentStatus": {
+          "value": "PhD candidate",
+          "sourceIds": [
+            "yusheng-about",
+            "yusheng-cv"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "researchInterests": {
+          "value": [
+            "Systems software for AI infrastructure",
+            "GPU runtimes and policy mechanisms",
+            "Distributed-training performance diagnosis",
+            "Programmable Linux runtimes",
+            "Observability and control for autonomous agents"
+          ],
+          "sourceIds": [
+            "yusheng-about"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "degree": {
+          "value": "PhD",
+          "sourceIds": [
+            "yusheng-cv"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "programStartYear": {
+          "value": 2024,
+          "sourceIds": [
+            "yusheng-cv"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "expectedGraduationYear": {
+          "value": 2027,
+          "sourceIds": [
+            "yusheng-cv",
+            "yusheng-about"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        }
+      },
+      "sources": [
+        {
+          "id": "yusheng-about",
+          "url": "https://yunwei37.com/about",
+          "title": "About | Yusheng Zheng",
+          "sourceDate": null,
+          "evidenceExcerpt": "I am a Ph.D. candidate in Computer Science and Engineering at UC Santa Cruz"
+        },
+        {
+          "id": "yusheng-cv",
+          "url": "https://yunwei37.com/cv.pdf",
+          "title": "Yusheng Zheng - ML Systems CV",
+          "sourceDate": null,
+          "evidenceExcerpt": "Ph.D. in Computer Science and Engineering; advisor: Andi Quinn Sep 2024 – Expected 2027"
+        },
+        {
+          "id": "yusheng-osdi-paper",
+          "url": "https://www.usenix.org/conference/osdi25/presentation/zheng-yusheng",
+          "title": "Extending Applications Safely and Efficiently",
+          "sourceDate": null,
+          "evidenceExcerpt": "Yusheng Zheng, UC Santa Cruz; Tong Yu, eunomia-bpf Community; Yiwei Yang, UC Santa Cruz"
+        }
+      ],
+      "warnings": [
+        "The personal profile and CV do not state an update date. Current academic claims and expected completion need human confirmation; confidence is medium.",
+        "2027 is the author-stated expected PhD year, not an estimate from publication dates or a guarantee of completion.",
+        "The Summer2026 internship was not treated as current November employment."
+      ],
+      "queriedAt": "2026-11-11T01:05:22Z",
+      "requiresHumanReview": true,
+      "researchMethod": "assistant_agents_public_sources"
+    },
+    {
+      "candidateId": "author:00268649c615f475",
+      "identity": {
+        "status": "unresolved",
+        "confidence": "low",
+        "matchedPaperIds": [
+          "usenix:osdi:2026:wu-tianyuan"
+        ],
+        "sourceIds": [
+          "zhiqiang-weave-paper"
+        ],
+        "rationale": "The official Weave record identifies a Zhiqiang Lv in the matching coauthor group with a publication affiliation at Alibaba Group. A unique current personal or academic profile could not be resolved; publication authorship alone does not establish current academic facts."
+      },
+      "academic": {
+        "currentAffiliation": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "currentStatus": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "researchInterests": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "degree": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "programStartYear": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "expectedGraduationYear": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        }
+      },
+      "sources": [
+        {
+          "id": "zhiqiang-weave-paper",
+          "url": "https://www.usenix.org/conference/osdi26/presentation/wu-tianyuan",
+          "title": "Weave: Efficient Co-Scheduling for Disaggregated RL Post-Training",
+          "sourceDate": null,
+          "evidenceExcerpt": "Shaopan Xiong, Zhiqiang Lv, Ju Huang, Siran Yang, Yinghao Yu, Jiamang Wang, and Lin Qu, Alibaba Group"
+        }
+      ],
+      "warnings": [
+        "Current profile identity remains unresolved. Same-name results were not merged.",
+        "The publication affiliation is paper-year evidence and does not verify current affiliation, role, degree, enrollment, research interests, or graduation.",
+        "All academic fields remain unknown; no timeline was inferred."
+      ],
+      "queriedAt": "2026-11-11T01:05:22Z",
+      "requiresHumanReview": true,
+      "researchMethod": "assistant_agents_public_sources"
+    },
+    {
+      "candidateId": "author:002a06b74d574ed9",
+      "identity": {
+        "status": "matched",
+        "confidence": "high",
+        "matchedPaperIds": [
+          "publisher:imc:2026:732d7b72"
+        ],
+        "sourceIds": [
+          "nimesha-personal",
+          "nimesha-project-team",
+          "nimesha-imc-list"
+        ],
+        "rationale": "The personal profile lists the exact IMC2026 title and coauthors Frank Li, Sanjay Jha, and Arash Shaghaghi. The university-hosted project page links the same personal profile and identifies the author as a UNSW PhD candidate."
+      },
+      "academic": {
+        "currentAffiliation": {
+          "value": "UNSW Sydney, School of Computer Science and Engineering",
+          "sourceIds": [
+            "nimesha-personal",
+            "nimesha-project-team"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "currentStatus": {
+          "value": "PhD candidate",
+          "sourceIds": [
+            "nimesha-personal",
+            "nimesha-project-team"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "researchInterests": {
+          "value": [
+            "Network security",
+            "Encrypted traffic analysis",
+            "Internet measurement",
+            "Post-quantum TLS"
+          ],
+          "sourceIds": [
+            "nimesha-personal",
+            "nimesha-project-team"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "degree": {
+          "value": "PhD",
+          "sourceIds": [
+            "nimesha-project-team",
+            "nimesha-personal"
+          ],
+          "asOf": null,
+          "confidence": "medium",
+          "basis": "source_stated"
+        },
+        "programStartYear": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        },
+        "expectedGraduationYear": {
+          "value": null,
+          "sourceIds": [],
+          "asOf": null,
+          "confidence": "unknown",
+          "basis": "unknown"
+        }
+      },
+      "sources": [
+        {
+          "id": "nimesha-personal",
+          "url": "https://nime-sha256.info/",
+          "title": "Nimesha Wickramasinghe | Network Security Researcher",
+          "sourceDate": null,
+          "evidenceExcerpt": "Network security researcher working on encrypted traffic analysis, Internet measurement, and post-quantum TLS."
+        },
+        {
+          "id": "nimesha-project-team",
+          "url": "https://cgi.cse.unsw.edu.au/~pqtls/team.html",
+          "title": "The Team | Mind the Gap",
+          "sourceDate": null,
+          "evidenceExcerpt": "Nimesha is a PhD researcher at UNSW Sydney working across network security, machine learning, and Internet measurements."
+        },
+        {
+          "id": "nimesha-imc-list",
+          "url": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+          "title": "ACM IMC 2026 - Accepted Papers",
+          "sourceDate": null,
+          "evidenceExcerpt": "Nimesha Wickramasinghe, Frank Li, Sanjay Jha, Arash Shaghaghi"
+        }
+      ],
+      "warnings": [
+        "The reviewed personal and university project pages do not state update dates. Current claims require human confirmation and have medium confidence.",
+        "No program start year or expected graduation year was stated in the reviewed sources. Employment dates were not used as enrollment evidence.",
+        "PhD denotes an ongoing program, not an awarded degree; no subject specialization beyond the stated research interests was inferred."
+      ],
+      "queriedAt": "2026-11-11T01:05:22Z",
+      "requiresHumanReview": true,
+      "researchMethod": "assistant_agents_public_sources"
+    },
+    {
+      "candidateId": "author:003cc5d1117b64a7",
+      "identity": {
+        "status": "matched",
+        "confidence": "high",
+        "matchedPaperIds": [
+          "usenix:osdi:2026:wu-tianyuan",
+          "usenix:osdi:2026:gao"
+        ],
+        "sourceIds": [
+          "tianyuan-cv",
+          "tianyuan-publications"
+        ],
+        "rationale": "The personal publications page lists both Weave and RollArt with the matching conference, year, and full coauthor groups, including Wei Gao, Yuheng Zhao, Weixun Wang, and Wei Wang. The same site supplies the academic CV."
+      },
+      "academic": {
+        "currentAffiliation": {
+          "value": "Hong Kong University of Science and Technology",
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        },
+        "currentStatus": {
+          "value": "PhD candidate",
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        },
+        "researchInterests": {
+          "value": [
+            "Reliable distributed-training infrastructure",
+            "Machine learning systems",
+            "RL post-training scheduling",
+            "Operating-system support for autonomous agents"
+          ],
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        },
+        "degree": {
+          "value": "PhD",
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        },
+        "programStartYear": {
+          "value": 2024,
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        },
+        "expectedGraduationYear": {
+          "value": 2027,
+          "sourceIds": [
+            "tianyuan-cv"
+          ],
+          "asOf": "2026-09-24",
+          "confidence": "high",
+          "basis": "source_stated"
+        }
+      },
+      "sources": [
+        {
+          "id": "tianyuan-cv",
+          "url": "https://wutianyuan1.github.io/cv/",
+          "title": "CV - Tianyuan Wu (Madoka)",
+          "sourceDate": "2026-09-24",
+          "evidenceExcerpt": "Ph.D. in Computer Science, The Hong Kong University of Science and Technology, 2024 - 2027 (Expected)"
+        },
+        {
+          "id": "tianyuan-publications",
+          "url": "https://wutianyuan1.github.io/publications/",
+          "title": "Publications - Tianyuan Wu (Madoka)",
+          "sourceDate": "2026-09-24",
+          "evidenceExcerpt": "Weave: Efficient Co-Scheduling for Disaggregated RL Post-Training"
+        }
+      ],
+      "warnings": [
+        "The source date is the site-stated last-updated date, not a separately dated university enrollment verification.",
+        "2027 is the explicit expected year on the personal CV. It was not calculated from publication history or default degree duration.",
+        "PhD candidate status and the expected completion year are self-reported and require human review before sourcing."
+      ],
+      "queriedAt": "2026-11-11T01:05:22Z",
+      "requiresHumanReview": true,
+      "researchMethod": "assistant_agents_public_sources"
+    }
+  ]
+}

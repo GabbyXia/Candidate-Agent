@@ -1,0 +1,1521 @@
+[
+  {
+    "id": "source-plan:osdi:2023:main:v1:8687417efb01",
+    "scopeKey": "osdi:2023:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "osdi",
+      "year": 2023,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/osdi23/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/osdi23/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "OSDI '23 Technical Sessions",
+        "year": "OSDI '23 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "8687417efb0131df9f986a872cbccd26c4503825148f087684027b678fd802b6",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/osdi23/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:42:29.376Z",
+      "sourceFingerprint": "5796ac8f48cedab25df5163e1ae305ddefb4630e48ab5bdaeeb5aa27928d72ca",
+      "expectedPapers": null,
+      "parsedPapers": 55,
+      "baselinePapers": null,
+      "authorOccurrences": 441,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/osdi23/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/osdi23/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "5796ac8f48cedab25df5163e1ae305ddefb4630e48ab5bdaeeb5aa27928d72ca"
+    }
+  },
+  {
+    "id": "source-plan:osdi:2024:main:v1:6d5f87a9959d",
+    "scopeKey": "osdi:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "osdi",
+      "year": 2024,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/osdi24/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/osdi24/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "OSDI '24 Technical Sessions",
+        "year": "2024",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "6d5f87a9959df0f110e283fbd23a2c349c138257bafe89492d1082178db446dc",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/osdi24/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:41.598Z",
+      "sourceFingerprint": "1dc05179632045cb7b902a2b3d0b4aa6cafbc1a824a8bc738a1d346d5dafd631",
+      "expectedPapers": null,
+      "parsedPapers": 53,
+      "baselinePapers": 53,
+      "authorOccurrences": 379,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/osdi24/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/osdi24/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "1dc05179632045cb7b902a2b3d0b4aa6cafbc1a824a8bc738a1d346d5dafd631"
+    }
+  },
+  {
+    "id": "source-plan:osdi:2025:main:v1:c85815a9771a",
+    "scopeKey": "osdi:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "osdi",
+      "year": 2025,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/osdi25/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/osdi25/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "OSDI '25 Technical Sessions",
+        "year": "OSDI '25 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "c85815a9771a4d3c052ec15ba845fed8b35d848c12740a3eb8079cf4478e64b7",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/osdi25/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:30.121Z",
+      "sourceFingerprint": "5d44b4e91fe5428800eafe24f197d862c9d5a3723243925a9dc951d5685c24b9",
+      "expectedPapers": null,
+      "parsedPapers": 53,
+      "baselinePapers": 53,
+      "authorOccurrences": 380,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/osdi25/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/osdi25/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "5d44b4e91fe5428800eafe24f197d862c9d5a3723243925a9dc951d5685c24b9"
+    }
+  },
+  {
+    "id": "source-plan:osdi:2026:main:v1:1717b0555661",
+    "scopeKey": "osdi:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "osdi",
+      "year": 2026,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/osdi26/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/osdi26/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "OSDI '26 Technical Sessions",
+        "year": "OSDI '26 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "1717b0555661fbd41f92b3bf52b8e709b2f23bf64ed0c745f1277d7b309b6db8",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/osdi26/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:49.542Z",
+      "sourceFingerprint": "f3b6ba9f79abc5b62f42dcb528cb869b0403eb462305df21c3ff15a0daed7721",
+      "expectedPapers": null,
+      "parsedPapers": 136,
+      "baselinePapers": 136,
+      "authorOccurrences": 1120,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/osdi26/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/osdi26/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "f3b6ba9f79abc5b62f42dcb528cb869b0403eb462305df21c3ff15a0daed7721"
+    }
+  },
+  {
+    "id": "source-plan:nsdi:2023:main:v1:a41744f76924",
+    "scopeKey": "nsdi:2023:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "nsdi",
+      "year": 2023,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/nsdi23/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/nsdi23/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "NSDI '23 Technical Sessions",
+        "year": "2023",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "a41744f7692439e17422c6a2cf133dae5933f58485778baa97d7fbd4c7e3358c",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/nsdi23/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:42:29.350Z",
+      "sourceFingerprint": "ca4ff2f14faf3665f2bfd22155823d078e615a9fe1720b65adea152d03ad2de7",
+      "expectedPapers": null,
+      "parsedPapers": 96,
+      "baselinePapers": null,
+      "authorOccurrences": 696,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/nsdi23/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/nsdi23/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "ca4ff2f14faf3665f2bfd22155823d078e615a9fe1720b65adea152d03ad2de7"
+    }
+  },
+  {
+    "id": "source-plan:nsdi:2024:main:v1:e4198edcdc42",
+    "scopeKey": "nsdi:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "nsdi",
+      "year": 2024,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/nsdi24/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/nsdi24/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "NSDI '24 Technical Sessions",
+        "year": "NSDI '24 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "e4198edcdc42efb8ae70879e303480fce71a323753855a9dae4e751fbecde44e",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/nsdi24/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:47.180Z",
+      "sourceFingerprint": "dac14d185aa7885c7dc21965be54b1cfbd7990383baec6c1ea62d104ad96a4c6",
+      "expectedPapers": null,
+      "parsedPapers": 112,
+      "baselinePapers": 112,
+      "authorOccurrences": 826,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/nsdi24/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/nsdi24/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "dac14d185aa7885c7dc21965be54b1cfbd7990383baec6c1ea62d104ad96a4c6"
+    }
+  },
+  {
+    "id": "source-plan:nsdi:2025:main:v1:44c84823c788",
+    "scopeKey": "nsdi:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "nsdi",
+      "year": 2025,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/nsdi25/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/nsdi25/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "NSDI '25 Technical Sessions",
+        "year": "NSDI '25 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "44c84823c788e156aedcbe4ad9da3ec6da434f12b99e9bf2b85c01649b39c05e",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/nsdi25/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:46.786Z",
+      "sourceFingerprint": "a9b7833cd2e50e63afc1c5834239ac9d6b25cb2f2bb76ca6189935872cad530f",
+      "expectedPapers": null,
+      "parsedPapers": 83,
+      "baselinePapers": 83,
+      "authorOccurrences": 620,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/nsdi25/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/nsdi25/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "a9b7833cd2e50e63afc1c5834239ac9d6b25cb2f2bb76ca6189935872cad530f"
+    }
+  },
+  {
+    "id": "source-plan:nsdi:2026:main:v1:4f7a7bd3e739",
+    "scopeKey": "nsdi:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "nsdi",
+      "year": 2026,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/nsdi26/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/nsdi26/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "NSDI '26 Technical Sessions",
+        "year": "NSDI '26 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "4f7a7bd3e739e2ca89bc8a9cf65cd017fb4e0936945ceaf4815654d183e1b7c9",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/nsdi26/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:49.786Z",
+      "sourceFingerprint": "4f6f462e578d8dacccee9bcd07d4bde39acc8eaea9074d521a7eebdeebcebd41",
+      "expectedPapers": null,
+      "parsedPapers": 150,
+      "baselinePapers": 150,
+      "authorOccurrences": 1228,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/nsdi26/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/nsdi26/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "4f6f462e578d8dacccee9bcd07d4bde39acc8eaea9074d521a7eebdeebcebd41"
+    }
+  },
+  {
+    "id": "source-plan:fast:2023:main:v1:cd2866fb14b8",
+    "scopeKey": "fast:2023:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "fast",
+      "year": 2023,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/fast23/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/fast23/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "FAST '23 Technical Sessions",
+        "year": "2023",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "cd2866fb14b8a8165ec998f56b3b69175946e95a7361a7f0b19697b1226801d7",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/fast23/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:08:48.390Z",
+      "sourceFingerprint": "660f4c03dc1d30d72e1c704405400b719a66e0219e04fd0551e44fcbe17693a0",
+      "expectedPapers": null,
+      "parsedPapers": 28,
+      "baselinePapers": null,
+      "authorOccurrences": 231,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/fast23/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/fast23/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "660f4c03dc1d30d72e1c704405400b719a66e0219e04fd0551e44fcbe17693a0"
+    }
+  },
+  {
+    "id": "source-plan:fast:2024:main:v1:8ea3ad382729",
+    "scopeKey": "fast:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "fast",
+      "year": 2024,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/fast24/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/fast24/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "FAST '24 Technical Sessions",
+        "year": "FAST '24 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "8ea3ad3827290be72efb822f05a29be10e41b168bb3f3ff366bcbe9c3f2c2ff8",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/fast24/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:08:22.865Z",
+      "sourceFingerprint": "705101099bdaa5b9dcd9ab8948c509014f9909f1ed6f38687a2d06e4eab36f3c",
+      "expectedPapers": null,
+      "parsedPapers": 22,
+      "baselinePapers": null,
+      "authorOccurrences": 149,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/fast24/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/fast24/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "705101099bdaa5b9dcd9ab8948c509014f9909f1ed6f38687a2d06e4eab36f3c"
+    }
+  },
+  {
+    "id": "source-plan:fast:2025:main:v1:4108c34c9ff0",
+    "scopeKey": "fast:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "fast",
+      "year": 2025,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/fast25/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/fast25/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "FAST '25 Technical Sessions",
+        "year": "FAST '25 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "4108c34c9ff05c87e078e2788601b2d7651bfa23f8ddf8b371cfe40dbbf47af8",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/fast25/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:08:05.498Z",
+      "sourceFingerprint": "ffed22bf33fb2390ebc6ffcbd2eb33c73ed1d36f62ee9c25722ea8759ccc2bbc",
+      "expectedPapers": null,
+      "parsedPapers": 36,
+      "baselinePapers": null,
+      "authorOccurrences": 224,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/fast25/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/fast25/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "ffed22bf33fb2390ebc6ffcbd2eb33c73ed1d36f62ee9c25722ea8759ccc2bbc"
+    }
+  },
+  {
+    "id": "source-plan:fast:2026:main:v1:309882f18f7d",
+    "scopeKey": "fast:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "fast",
+      "year": 2026,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/fast26/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/fast26/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "FAST '26 Technical Sessions",
+        "year": "FAST '26 Technical Sessions",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "309882f18f7dc9bc1debaef634f8893ea2864238c9e0d8250e10a763c9061019",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/fast26/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:08:05.911Z",
+      "sourceFingerprint": "d3965c17775443fac09a0e35a92724abedf6e6a893ceda91c610502dbd854bcf",
+      "expectedPapers": null,
+      "parsedPapers": 44,
+      "baselinePapers": null,
+      "authorOccurrences": 340,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/fast26/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/fast26/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "d3965c17775443fac09a0e35a92724abedf6e6a893ceda91c610502dbd854bcf"
+    }
+  },
+  {
+    "id": "source-plan:security:2023:main:v1:5786afb8996e",
+    "scopeKey": "security:2023:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "security",
+      "year": 2023,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/usenixsecurity23/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/usenixsecurity23/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX Security '23 Technical Sessions",
+        "year": "2023",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "5786afb8996e016d35ce86a4efc26781ba59f738489aaf4d058d0620b4172c1b",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/usenixsecurity23/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:09:04.395Z",
+      "sourceFingerprint": "9dadd8ac91803fd383d05398ab54bc2902dbbd34dab4972d5f326df24821bf19",
+      "expectedPapers": null,
+      "parsedPapers": 422,
+      "baselinePapers": null,
+      "authorOccurrences": 2108,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/usenixsecurity23/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/usenixsecurity23/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "9dadd8ac91803fd383d05398ab54bc2902dbbd34dab4972d5f326df24821bf19"
+    }
+  },
+  {
+    "id": "source-plan:security:2024:main:v1:5c350a8eceee",
+    "scopeKey": "security:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "security",
+      "year": 2024,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/usenixsecurity24/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/usenixsecurity24/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX Security '24 Technical Sessions",
+        "year": "2024",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "5c350a8eceeec957d2beb75a236a9bed1e899ce84508bddb50f9ec4ff6623569",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/usenixsecurity24/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:58.146Z",
+      "sourceFingerprint": "c3243cd3f904d3ef146448c9d1bd3f4c5ce5cddd18e0a3cb40dbaec3df3352e9",
+      "expectedPapers": null,
+      "parsedPapers": 417,
+      "baselinePapers": null,
+      "authorOccurrences": 2251,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/usenixsecurity24/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/usenixsecurity24/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "c3243cd3f904d3ef146448c9d1bd3f4c5ce5cddd18e0a3cb40dbaec3df3352e9"
+    }
+  },
+  {
+    "id": "source-plan:security:2025:main:v1:b99dee7c19eb",
+    "scopeKey": "security:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "security",
+      "year": 2025,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/usenixsecurity25/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/usenixsecurity25/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX Security '25 Technical Sessions",
+        "year": "2025",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "b99dee7c19ebb7515fbcb7c4773dce5e40f9c5e387a33b0f9382b5b5f23d2b52",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/usenixsecurity25/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:54.165Z",
+      "sourceFingerprint": "e4bfdbef00c6409ec3b0a6624768d46eb390a879278499dee7b111aec216dd8f",
+      "expectedPapers": null,
+      "parsedPapers": 438,
+      "baselinePapers": null,
+      "authorOccurrences": 2402,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/usenixsecurity25/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/usenixsecurity25/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "e4bfdbef00c6409ec3b0a6624768d46eb390a879278499dee7b111aec216dd8f"
+    }
+  },
+  {
+    "id": "source-plan:security:2026:main:v1:13a9c66252e5",
+    "scopeKey": "security:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "security",
+      "year": 2026,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/usenixsecurity26/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/usenixsecurity26/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX Security '26 Technical Sessions",
+        "year": "2026",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "13a9c66252e5612b0a40205ce1f1da37c28086d1a30c5e3920e47ce8a511e418",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/usenixsecurity26/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:55.213Z",
+      "sourceFingerprint": "e8f72dfefb8d51ad70722e0ad143e3cd317e9c6168d2aba71ec0b4b080d94377",
+      "expectedPapers": null,
+      "parsedPapers": 362,
+      "baselinePapers": null,
+      "authorOccurrences": 1964,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/usenixsecurity26/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/usenixsecurity26/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "e8f72dfefb8d51ad70722e0ad143e3cd317e9c6168d2aba71ec0b4b080d94377"
+    }
+  },
+  {
+    "id": "source-plan:atc:2023:main:v1:e1ea90c4f2f7",
+    "scopeKey": "atc:2023:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "atc",
+      "year": 2023,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/atc23/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/atc23/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX ATC '23 Technical Sessions",
+        "year": "2023",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "e1ea90c4f2f78c52f851b00ec9d97b3124b4b1e9c9e61e12a5091f1bd3d0922d",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/atc23/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T02:08:51.635Z",
+      "sourceFingerprint": "5fa8982a442514630890f629f908014c5d4da1b10a9ff8114537b2def8cb7b30",
+      "expectedPapers": null,
+      "parsedPapers": 65,
+      "baselinePapers": null,
+      "authorOccurrences": 467,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/atc23/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/atc23/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "5fa8982a442514630890f629f908014c5d4da1b10a9ff8114537b2def8cb7b30"
+    }
+  },
+  {
+    "id": "source-plan:atc:2024:main:v1:94ec8fffaed5",
+    "scopeKey": "atc:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "atc",
+      "year": 2024,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/atc24/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/atc24/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX ATC '24 Technical Sessions",
+        "year": "2024",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "94ec8fffaed52bf8e05e32962ef8c318fb184e44630b5b7c1ad2facd4d52ebbb",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/atc24/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:45.632Z",
+      "sourceFingerprint": "86d5fc6d94e12e848913d201707ee4e16d0245c6a1d5424c7573f2653ec27f4a",
+      "expectedPapers": null,
+      "parsedPapers": 77,
+      "baselinePapers": null,
+      "authorOccurrences": 530,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/atc24/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/atc24/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "86d5fc6d94e12e848913d201707ee4e16d0245c6a1d5424c7573f2653ec27f4a"
+    }
+  },
+  {
+    "id": "source-plan:atc:2025:main:v1:e8e09a44890a",
+    "scopeKey": "atc:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "atc",
+      "year": 2025,
+      "track": "main",
+      "adapter": "usenix-v1",
+      "entryUrl": "https://www.usenix.org/conference/atc25/technical-sessions",
+      "authorityUrl": "https://www.usenix.org/conference/atc25/technical-sessions",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "USENIX ATC '25 Technical Sessions",
+        "year": "2025",
+        "accepted": "Technical Sessions"
+      }
+    },
+    "digest": "e8e09a44890a70c89f62da278abddcc3e3aac858edb53381fef8b481a59e3501",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://www.usenix.org/conference/atc25/technical-sessions",
+      "sourceRetrievedAt": "2026-11-11T00:41:48.115Z",
+      "sourceFingerprint": "06da011b240bddb04c9eebddcd3ddc5297e66496046972777ceccbd840528f60",
+      "expectedPapers": null,
+      "parsedPapers": 100,
+      "baselinePapers": null,
+      "authorOccurrences": 691,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://www.usenix.org/conference/atc25/technical-sessions",
+        "entryUrl": "https://www.usenix.org/conference/atc25/technical-sessions",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "usenix-v1:2026-11-10-r2",
+      "contentDigest": "06da011b240bddb04c9eebddcd3ddc5297e66496046972777ceccbd840528f60"
+    }
+  },
+  {
+    "id": "source-plan:atc:2026:main:v1:9ff4307bf575",
+    "scopeKey": "atc:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "atc",
+      "year": 2026,
+      "track": "main",
+      "adapter": "generic-html-v1",
+      "entryUrl": "https://atc.sigops.org/2026/accepted.html",
+      "authorityUrl": "https://atc.sigops.org/2026/accepted.html",
+      "extraction": {
+        "recordSelector": "ul.paperlist > li",
+        "titleSelector": "strong",
+        "authorsSelector": "em",
+        "linkSelector": null,
+        "pdfSelector": null,
+        "authorFormat": "parentheses",
+        "titleFrom": "text",
+        "authorsFrom": "text"
+      },
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ATC 2026",
+        "year": "2026",
+        "accepted": "The following 135 papers have been accepted"
+      }
+    },
+    "digest": "9ff4307bf575001f1f4c939ead9cd53913f5825706b96dfcf0f47b19b7814aa6",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://atc.sigops.org/2026/accepted.html",
+      "sourceRetrievedAt": "2026-11-11T01:32:12.963Z",
+      "sourceFingerprint": "bf2f3e0ae211f011e137f04d588a9fc9290a0f34eb3e18285aaf4aeb995eec61",
+      "expectedPapers": 135,
+      "parsedPapers": 135,
+      "baselinePapers": null,
+      "authorOccurrences": 946,
+      "invalidRecords": 0,
+      "collectionComplete": true,
+      "completenessStatus": "verified_count",
+      "warnings": [],
+      "authority": {
+        "authorityUrl": "https://atc.sigops.org/2026/accepted.html",
+        "entryUrl": "https://atc.sigops.org/2026/accepted.html",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "generic-html-v1:2026-11-10",
+      "contentDigest": "bf2f3e0ae211f011e137f04d588a9fc9290a0f34eb3e18285aaf4aeb995eec61"
+    }
+  },
+  {
+    "id": "source-plan:sigcomm:2024:main:v1:e3e1a0517227",
+    "scopeKey": "sigcomm:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "sigcomm",
+      "year": 2024,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/sigcomm/2024/accepted-papers/",
+      "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2024/accepted-papers/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ACM SIGCOMM 2024 List of Accepted Papers",
+        "year": "2024",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "e3e1a0517227d9973de9994ebbb9e0467ef2b8bd3f715e7122a21a1d47ecab47",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/sigcomm/2024/accepted-papers/",
+      "sourceRetrievedAt": "2026-11-11T00:43:00.312Z",
+      "sourceFingerprint": "da54c18bad36d36fa29e6263f103e9f132fcd462837a3dbf36c0e3801cdb7fb4",
+      "expectedPapers": null,
+      "parsedPapers": 62,
+      "baselinePapers": 62,
+      "authorOccurrences": 520,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2024/accepted-papers/",
+        "entryUrl": "https://conferences.sigcomm.org/sigcomm/2024/accepted-papers/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "da54c18bad36d36fa29e6263f103e9f132fcd462837a3dbf36c0e3801cdb7fb4"
+    }
+  },
+  {
+    "id": "source-plan:sigcomm:2025:main:v1:ef327e887270",
+    "scopeKey": "sigcomm:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "sigcomm",
+      "year": 2025,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/sigcomm/2025/accepted-papers/",
+      "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2025/accepted-papers/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ACM SIGCOMM 2025 List of Accepted Papers",
+        "year": "2025",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "ef327e887270be418492338723a6f76f216b1a03dd4eccc172639665aeaab152",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/sigcomm/2025/accepted-papers/",
+      "sourceRetrievedAt": "2026-11-11T00:43:00.475Z",
+      "sourceFingerprint": "380fae993de24b32de88d820871d79f687657758a963da659d343968c596419f",
+      "expectedPapers": null,
+      "parsedPapers": 88,
+      "baselinePapers": 88,
+      "authorOccurrences": 921,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2025/accepted-papers/",
+        "entryUrl": "https://conferences.sigcomm.org/sigcomm/2025/accepted-papers/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "380fae993de24b32de88d820871d79f687657758a963da659d343968c596419f"
+    }
+  },
+  {
+    "id": "source-plan:sigcomm:2026:main:v1:f2d051a01bbf",
+    "scopeKey": "sigcomm:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "sigcomm",
+      "year": 2026,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/sigcomm/2026/accepted/",
+      "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2026/accepted/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "SIGCOMM 2026 Accepted Papers",
+        "year": "2026",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "f2d051a01bbf5c4eea667a044ca6ded563b2b60b1f36ceaaeba22ae66a68e850",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/sigcomm/2026/accepted/",
+      "sourceRetrievedAt": "2026-11-11T00:43:00.235Z",
+      "sourceFingerprint": "2b51dc70c9dfc478cf5680f13f3f55c33fce03f1ab1afcd8bf6dfd658ec9c003",
+      "expectedPapers": 110,
+      "parsedPapers": 109,
+      "baselinePapers": 109,
+      "authorOccurrences": 1015,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "count_mismatch",
+      "warnings": [
+        "Publisher states 110 accepted papers; 109 were parsed."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/sigcomm/2026/accepted/",
+        "entryUrl": "https://conferences.sigcomm.org/sigcomm/2026/accepted/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "2b51dc70c9dfc478cf5680f13f3f55c33fce03f1ab1afcd8bf6dfd658ec9c003"
+    }
+  },
+  {
+    "id": "source-plan:conext:2024:main:v1:8bb72de04174",
+    "scopeKey": "conext:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "conext",
+      "year": 2024,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/co-next/2024/partials/accepted-papers.html",
+      "authorityUrl": "https://conferences.sigcomm.org/co-next/2024/partials/accepted-papers.html",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "CoNEXT 2024 Accepted Papers",
+        "year": "2024",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "8bb72de04174ccc70f7ec31b84d812916be9862c10a336faeb8ea074aa3e9cdf",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/co-next/2024/partials/accepted-papers.html",
+      "sourceRetrievedAt": "2026-11-11T00:43:48.614Z",
+      "sourceFingerprint": "efcd1b066e24aa74cca177337a47442daf394f3b7867a3717b704d4c35614435",
+      "expectedPapers": null,
+      "parsedPapers": 40,
+      "baselinePapers": 40,
+      "authorOccurrences": 209,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/co-next/2024/partials/accepted-papers.html",
+        "entryUrl": "https://conferences.sigcomm.org/co-next/2024/partials/accepted-papers.html",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "efcd1b066e24aa74cca177337a47442daf394f3b7867a3717b704d4c35614435"
+    }
+  },
+  {
+    "id": "source-plan:conext:2025:main:v1:3b8729e92144",
+    "scopeKey": "conext:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "conext",
+      "year": 2025,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences2.sigcomm.org/co-next/2025/partials/program.html?updated=191214",
+      "authorityUrl": "https://conferences2.sigcomm.org/co-next/2025/partials/program.html?updated=191214",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "CoNEXT 2025 Program",
+        "year": "2025",
+        "accepted": "CoNEXT 2025 Program"
+      }
+    },
+    "digest": "3b8729e9214433045f0911973a09556c68ee81a52a937111feafadab2d069650",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences2.sigcomm.org/co-next/2025/partials/program.html?updated=191214",
+      "sourceRetrievedAt": "2026-11-11T00:48:45.754Z",
+      "sourceFingerprint": "9a0f0b08f5df44fad19b3bbf33c2be7616636018fb4e3ad55bfb2b9d934dc104",
+      "expectedPapers": null,
+      "parsedPapers": 50,
+      "baselinePapers": 50,
+      "authorOccurrences": 303,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences2.sigcomm.org/co-next/2025/partials/program.html?updated=191214",
+        "entryUrl": "https://conferences2.sigcomm.org/co-next/2025/partials/program.html?updated=191214",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "9a0f0b08f5df44fad19b3bbf33c2be7616636018fb4e3ad55bfb2b9d934dc104"
+    }
+  },
+  {
+    "id": "source-plan:conext:2026:main:v1:a503f5255e88",
+    "scopeKey": "conext:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "conext",
+      "year": 2026,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences2.sigcomm.org/co-next/2026/partials/accepted-papers.html",
+      "authorityUrl": "https://conferences2.sigcomm.org/co-next/2026/partials/accepted-papers.html",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "CoNEXT",
+        "year": "2026",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "a503f5255e889f49f7e28b4a086c210c5a3d86421486634489cf98f9673902aa",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences2.sigcomm.org/co-next/2026/partials/accepted-papers.html",
+      "sourceRetrievedAt": "2026-11-11T00:43:50.339Z",
+      "sourceFingerprint": "1d3b47a834a68123c447a748705eaa7757606ddfac45fd6c75b06f6f0802e751",
+      "expectedPapers": null,
+      "parsedPapers": 60,
+      "baselinePapers": 60,
+      "authorOccurrences": 324,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown.",
+        "Conference/year context is confirmed by the exact trusted catalog source URL; the official fragment omits a standalone heading."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences2.sigcomm.org/co-next/2026/partials/accepted-papers.html",
+        "entryUrl": "https://conferences2.sigcomm.org/co-next/2026/partials/accepted-papers.html",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "1d3b47a834a68123c447a748705eaa7757606ddfac45fd6c75b06f6f0802e751"
+    }
+  },
+  {
+    "id": "source-plan:imc:2024:main:v1:da3db2bb67b1",
+    "scopeKey": "imc:2024:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "imc",
+      "year": 2024,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/imc/2024/accepted-papers/",
+      "authorityUrl": "https://conferences.sigcomm.org/imc/2024/accepted-papers/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ACM IMC 2024 - Accepted Papers Toggle navigation IMC 2024 Home Call",
+        "year": "2024",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "da3db2bb67b107e73797dd24864171fbc40e6bae96adc1793f0914a004584880",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/imc/2024/accepted-papers/",
+      "sourceRetrievedAt": "2026-11-11T00:45:24.792Z",
+      "sourceFingerprint": "e47e689c62b1f05f134812d11842ee87432182082ce532f8e229a8681e2e5941",
+      "expectedPapers": null,
+      "parsedPapers": 55,
+      "baselinePapers": 55,
+      "authorOccurrences": 302,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "The official accepted-paper listing supplies author names without affiliations; affiliations remain unknown.",
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/imc/2024/accepted-papers/",
+        "entryUrl": "https://conferences.sigcomm.org/imc/2024/accepted-papers/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "e47e689c62b1f05f134812d11842ee87432182082ce532f8e229a8681e2e5941"
+    }
+  },
+  {
+    "id": "source-plan:imc:2025:main:v1:e6c749c5b8c3",
+    "scopeKey": "imc:2025:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "imc",
+      "year": 2025,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/imc/2025/accepted-papers/",
+      "authorityUrl": "https://conferences.sigcomm.org/imc/2025/accepted-papers/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ACM IMC 2025 - Accepted Papers Toggle navigation Current Session IM",
+        "year": "2025",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "e6c749c5b8c3b6dc903c46bcc97d99e1cba52a7b5d775fafa8168a93e612853f",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/imc/2025/accepted-papers/",
+      "sourceRetrievedAt": "2026-11-11T00:45:21.942Z",
+      "sourceFingerprint": "e740b4be6a643e1e6c582eda56d4051a368846fe2283c743f28d9d64255ec497",
+      "expectedPapers": null,
+      "parsedPapers": 72,
+      "baselinePapers": 72,
+      "authorOccurrences": 368,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "The official accepted-paper listing supplies author names without affiliations; affiliations remain unknown.",
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/imc/2025/accepted-papers/",
+        "entryUrl": "https://conferences.sigcomm.org/imc/2025/accepted-papers/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "e740b4be6a643e1e6c582eda56d4051a368846fe2283c743f28d9d64255ec497"
+    }
+  },
+  {
+    "id": "source-plan:imc:2026:main:v1:f65b022344b9",
+    "scopeKey": "imc:2026:main",
+    "version": 1,
+    "plan": {
+      "schemaVersion": 1,
+      "conferenceId": "imc",
+      "year": 2026,
+      "track": "main",
+      "adapter": "networking-v1",
+      "entryUrl": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+      "authorityUrl": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+      "extraction": null,
+      "pagination": {
+        "mode": "single_page",
+        "maxPages": 1
+      },
+      "scopeEvidence": {
+        "conference": "ACM IMC 2026 - Accepted Papers Toggle navigation Current Session IM",
+        "year": "2026",
+        "accepted": "Accepted Papers"
+      }
+    },
+    "digest": "f65b022344b99bfd1a93dc9ccd3aadb98a7144dd57e2e4eef9129571d494165c",
+    "createdAt": "2026-11-11T02:14:18.293Z",
+    "status": "validated",
+    "validation": {
+      "ok": true,
+      "checkedAt": "2026-11-11T02:14:18.293Z",
+      "sourceUrl": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+      "sourceRetrievedAt": "2026-11-11T00:42:58.622Z",
+      "sourceFingerprint": "335f814b136c8a002e60b7aab62d690e93e1183844ce75758dc1475be5ea74ce",
+      "expectedPapers": null,
+      "parsedPapers": 77,
+      "baselinePapers": 77,
+      "authorOccurrences": 359,
+      "invalidRecords": 0,
+      "collectionComplete": false,
+      "completenessStatus": "unknown",
+      "warnings": [
+        "The official accepted-paper listing supplies author names without affiliations; affiliations remain unknown.",
+        "Publisher accepted-paper total is not stated; accepted-census completeness remains unknown."
+      ],
+      "authority": {
+        "authorityUrl": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+        "entryUrl": "https://conferences.sigcomm.org/imc/2026/accepted-papers/",
+        "method": "catalog_source_page"
+      },
+      "serviceVerdict": "pass",
+      "adapterVersion": "networking-v1:2026-11-10",
+      "contentDigest": "335f814b136c8a002e60b7aab62d690e93e1183844ce75758dc1475be5ea74ce"
+    }
+  }
+]
