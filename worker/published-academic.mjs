@@ -1,4 +1,4 @@
-import {currentProgramFacts} from '../shared/current-program.js';
+import {currentProgramFacts,recoverCitedProgramStart} from '../shared/current-program.js';
 
 const FIELDS=['currentAffiliation','currentStatus','researchInterests','degree','programStartYear'];
 const ROLES=new Set(['PhD student','PhD candidate',"Master's student",'Master’s student','Undergraduate student','Postdoctoral researcher','Postdoc','Researcher','Faculty','Professor','Assistant professor','Associate professor','Industry researcher','Research engineer','Engineer','Graduated','Other academic role','Other']);
@@ -34,7 +34,8 @@ export function projectAcademicResearch(candidateId,paperIds,input){
   academic[name]={value:f.value,sourceIds:ids,asOf:f.asOf??null,confidence:f.confidence,basis:'source_stated'};
  }
  const research={candidateId,identity:{status:identity.status,confidence:identity.confidence,matchedPaperIds,sourceIds:citations,rationale:identity.status==='matched'?'Cited publication anchors connect this academic profile to the author; facts remain source-cited proposals.':'Author identity is not established; academic facts remain unknown.'},academic,sources,warnings:['Verify currentness at the linked academic sources. Missing facts remain unknown.'],queriedAt:input.queriedAt,requiresHumanReview:true};
- const current=currentProgramFacts({id:candidateId,paperIds,academicResearch:research});
+ const candidate={id:candidateId,paperIds,academicResearch:research},recovered=recoverCitedProgramStart(candidate);if(recovered)academic.programStartYear=recovered;
+ const current=currentProgramFacts(candidate);
  if(!current.currentDegree)academic.degree=unknown();
  if(current.programStartYear===null)academic.programStartYear=unknown();
  return research;
