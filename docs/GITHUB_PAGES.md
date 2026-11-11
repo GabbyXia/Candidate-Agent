@@ -22,8 +22,8 @@ The interface and default Excel export use the first enrollment year of the
 current degree program. Cited proposal dates remain labeled unreviewed; missing
 or unsupported dates remain Unknown. Historical graduation fields can remain in
 the archived source JSON, but do not populate the start-year view. This public
-snapshot is separate from private research runs and does not copy their data
-automatically.
+snapshot is separate from local research runs. Only explicitly selected academic
+fact exports are imported; raw run state is never copied automatically.
 
 Visitors can search, filter, browse publication evidence, review proposals, keep
 browser-local shortlists/evidence, and download exports. Local edits do not update
@@ -52,6 +52,20 @@ is accessible to visitors at its site URL.
    uncertainty, and review status attached to the results.
 3. For a selected additional downloadable research artifact, follow
    [`data/published/README.md`](../data/published/README.md).
+
+   To publish a saved academic checkpoint, first generate a professional-field
+   projection:
+
+   ```sh
+   node scripts/export-academic-publication.mjs --input local-runs/network-continuation/run/cohorts/network.json --output data/published/network-academic-profiles.json
+   ```
+
+   A manifest entry with `"kind": "academic_profiles"` links those results to
+   existing author IDs and publication anchors. The same projection is used for
+   the downloadable JSON. Notes, raw errors, model diagnostics, screening
+   decisions, demographic checks and completion forecasts are excluded. Partial
+   lookup coverage and unsupported facts stay explicit. The original four-profile
+   pilot remains a separate archival download.
 4. Verify and build:
 
    ```sh

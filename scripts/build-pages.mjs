@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { createHash } from 'node:crypto';
 import { handleApi } from '../worker/api.mjs';
 import { DOMAINS, CONFERENCES } from '../shared/catalog.js';
+import { mergeAcademicPublication, academicPublicationCoverage, projectAcademicPublication } from '../worker/published-academic.mjs';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const marker = '.talent-atlas-pages';
@@ -30,7 +31,8 @@ async function publicationFiles(root) {
     const filename = basename(source);
     if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(filename) || names.has(filename.toLowerCase())) throw Error('Published artifact filenames must be unique and contain only letters, numbers, dots, underscores, or hyphens.');
     names.add(filename.toLowerCase());
-    return { title: String(entry.title || filename), description: String(entry.description || 'Published research artifact.'), filename, type: extname(filename).slice(1).toUpperCase(), content: await readFile(canonicalSource) };
+    if(entry.kind!==undefined&&!['download','academic_profiles'].includes(entry.kind))throw Error('Unknown publication artifact kind.');
+    return { title: String(entry.title || filename), description: String(entry.description || 'Published research artifact.'), filename, kind:entry.kind||'download', type: extname(filename).slice(1).toUpperCase(), content: await readFile(canonicalSource) };
   }));
 }
 
@@ -74,8 +76,17 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
   // live app's freshness window. Do not mark the archived findings as reviewed.
   const proposals = new Map((pilot.profiles || []).map(profile => [profile.candidateId, profile]));
   for (const candidate of bootstrap.candidates) if (proposals.has(candidate.id)) candidate.academicResearch = proposals.get(candidate.id);
+  const researchCheckpoints=[];
+  for(const addition of additions.filter(entry=>entry.kind==='academic_profiles')){
+    if(addition.type!=='JSON')throw Error('Academic profile publications must be JSON.');
+    const projected=projectAcademicPublication(JSON.parse(addition.content.toString('utf8')));
+    const report=mergeAcademicPublication(bootstrap,projected);researchCheckpoints.push(report);
+    addition.content=Buffer.from(json(projected));
+    addition.description=`${report.completedLookups.toLocaleString('en-US')} completed lookups out of ${report.researchGroups.toLocaleString('en-US')} author groups; ${report.retainedProfiles.toLocaleString('en-US')} retained source-cited proposals. ${report.complete?'Lookup coverage is complete; unsupported facts remain unknown.':'Partial lookup coverage; unsupported facts remain unknown.'}`;
+  }
   const researchedProfiles = bootstrap.candidates.filter(candidate => candidate.academicResearch?.candidateId === candidate.id).length;
-  bootstrap.publication = { publishedAt, sourceRetrievedAt: bootstrap.coverage?.retrievedAt || sourceSnapshot.retrievedAt || null, mode: 'static_snapshot', researchedProfiles };
+  const factCoverage=academicPublicationCoverage(bootstrap);
+  bootstrap.publication = { publishedAt, sourceRetrievedAt: bootstrap.coverage?.retrievedAt || sourceSnapshot.retrievedAt || null, mode: 'static_snapshot', researchedProfiles, researchCheckpoints, factCoverage };
   bootstrap.criteria = { ...(bootstrap.criteria || {}), dateMode: 'current_program_start', programStartYearFrom: null, programStartYearTo: null, targetGraduationYear: null };
 
   await prepareOutput(output, root);
@@ -113,7 +124,7 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
   vm.runInNewContext(currentProgram + '\n' + await readFile(resolve(ui, 'mapping-export.js'), 'utf8'), context, { filename: 'mapping-export.js' });
   const workbook = context.buildMappingWorkbook(bootstrap, { id: 'published-snapshot', state: 'published_snapshot', stage: 'export_ready', createdAt: publishedAt, updatedAt: publishedAt, input: { role: bootstrap.coverage?.role, keywords: 'network, networking, congestion, routing, transport, datacenter' } });
   await artifact('talent-atlas-research.xlsx', 'Research workbook', 'All published profiles, papers, source citations, coverage, and review status in an Excel workbook.', Buffer.from(workbook), 'XLSX');
-  await artifact('academic-research.json', 'Academic research pilot', `${researchedProfiles.toLocaleString('en-US')} dated, source-cited academic profile proposals. Findings remain unreviewed.`, json(pilot), 'JSON');
+  await artifact('academic-research.json', 'Original academic research pilot', `${pilot.profiles.length.toLocaleString('en-US')} original dated academic profile proposals. The larger selected checkpoint is published separately.`, json(pilot), 'JSON');
   await artifact('source-plans.json', 'Published source plans', 'Checked-in source plan versions and their original validation evidence.', json(sourcePlans), 'JSON');
   for (const entry of additions) await artifact(entry.filename, entry.title, entry.description, entry.content, entry.type, 'downloads/published');
   const snapshotVersion = createHash('sha256').update(json(bootstrap)).digest('hex').slice(0, 16);

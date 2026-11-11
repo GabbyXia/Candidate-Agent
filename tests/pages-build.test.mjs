@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, readdir, writeFile, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, writeFile, rm, symlink, cp } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import vm from 'node:vm';
@@ -52,12 +52,18 @@ test('Pages build retains the complete dated research snapshot and works below a
     assert.equal(bootstrap.coverage.authorOccurrences, 8869);
     assert.equal(bootstrap.coverage.editions.length, 15);
     const pilot = await readJson(new URL('data/academic-research.json', projectRoot));
+    const selected = await readJson(new URL('data/published/network-academic-profiles.json', projectRoot));
+    const expectedProfileIds = new Set([...pilot.profiles.map(profile=>profile.candidateId),...selected.profiles.map(profile=>profile.candidateId)]);
     const proposals = bootstrap.candidates.filter(candidate => candidate.academicResearch);
-    assert.equal(proposals.length, 4);
-    assert.equal(result.researchedProfiles, 4);
-    assert.equal(bootstrap.publication.researchedProfiles, 4);
+    assert.equal(proposals.length, expectedProfileIds.size);
+    assert.equal(result.researchedProfiles, expectedProfileIds.size);
+    assert.equal(bootstrap.publication.researchedProfiles, expectedProfileIds.size);
+    assert.equal(result.researchCheckpoints[0].completedLookups,selected.checkpoint.completedLookups);
+    assert.equal(result.researchCheckpoints[0].researchGroups,5433);
+    assert.equal(result.researchCheckpoints[0].complete,selected.checkpoint.complete);
     for (const candidate of proposals) {
-      assert.deepEqual(candidate.academicResearch, pilot.profiles.find(profile => profile.candidateId === candidate.id));
+      assert.ok(expectedProfileIds.has(candidate.id));
+      assert.equal(candidate.academicResearch.candidateId,candidate.id);
       assert.equal(candidate.academicProfile, undefined);
     }
     assert.equal(result.publishedAt, publishedAt);
@@ -99,8 +105,11 @@ test('Pages build retains the complete dated research snapshot and works below a
     assert.ok(headers.includes('Source-stated current program start year'));
     assert.doesNotMatch(headers.join(' | '), /graduat|Estimated/i);
     const supportedRows = candidateRows.slice(1).filter(row => row.K === 'source_stated_current_program');
-    assert.equal(supportedRows.length, 2, 'The public pilot has two cited current-program start years.');
-    for (const row of supportedRows) assert.equal(row.I, '2024');
+    const expectedStarts=new Map(proposals.filter(c=>Number.isInteger(c.academicResearch.academic.programStartYear?.value)).map(c=>[c.id,c.academicResearch.academic.programStartYear.value]));
+    assert.equal(supportedRows.length, expectedStarts.size);
+    assert.equal(supportedRows.length,result.factCoverage.currentProgramStarts);
+    assert.ok(supportedRows.length>=20);
+    for (const row of supportedRows) assert.equal(row.I, String(expectedStarts.get(row.A)));
     assert.match(zipFile(workbook, 'xl/worksheets/sheet5.xml'), /dimension ref="A1:N1201"/);
     const files = await tree(output);
     assert.ok(files.includes('.nojekyll'));
@@ -139,4 +148,15 @@ test('Only explicitly published artifacts can enter the public output, with path
     await writeFile(resolve(published, 'manifest.json'), JSON.stringify({ artifacts: [{ file: '.env' }] }));
     await assert.rejects(buildPages({ sourceRoot: temporary, outputDir: resolve(temporary, 'site'), publishedAt }), /JSON, XLSX, CSV, or PDF/);
   } finally { await rm(temporary, { recursive: true, force: true }); }
+});
+
+test('academic download bytes are projected as strictly as the bootstrap data',async()=>{
+ const temporary=await mkdtemp(resolve(tmpdir(),'talent-public-profile-')),root=resolve(temporary,'source'),output=resolve(temporary,'site'),sentinel='do-not-publish-private-sentinel';
+ try{
+  await mkdir(root,{recursive:true});for(const name of ['data','ui','shared'])await cp(new URL(name,projectRoot),resolve(root,name),{recursive:true});
+  const file=resolve(root,'data/published/network-academic-profiles.json'),input=await readJson(file);input.privateNotes=sentinel;input.profiles[0].research.privateNotes=sentinel;input.profiles[0].research.sources[0]&&(input.profiles[0].research.sources[0].privateNotes=sentinel);await writeFile(file,JSON.stringify(input));
+  const result=await buildPages({sourceRoot:root,outputDir:output,publishedAt}),artifact=result.artifacts.find(a=>a.filename==='network-academic-profiles.json'),target=new URL(artifact.href,'https://gabbyxia.github.io/Candidate-Agent/');
+  assert(!String(await readFile(resolve(output,target.pathname.slice('/Candidate-Agent/'.length)))).includes(sentinel));assert(!String(await readFile(resolve(output,'snapshot/bootstrap.json'))).includes(sentinel));
+  const pilotDownload=result.artifacts.find(a=>a.filename==='academic-research.json');assert.match(pilotDownload.description,/^4 original/);
+ }finally{await rm(temporary,{recursive:true,force:true});}
 });

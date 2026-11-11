@@ -42,7 +42,7 @@ function memoryIndexedDB({initial,failWrites=false}={}){
   return {records,open(){const request={};setImmediate(()=>{request.result=db;if(!created)request.onupgradeneeded?.();request.onsuccess?.()});return request}};
 }
 
-async function app({year=2026,saved,legacy,bootstrap=fixture(year),fetchFailure=false,indexedDB}={}) {
+async function app({year=2026,saved,legacy,bootstrap=fixture(year),fetchFailure=false,indexedDB,staticMode=false,snapshotConfig={}}={}) {
   const nodes=new Map(),selections=new Map(),listeners=new Map(),downloads=[],fetches=[];
   const storage=new Map(saved?[['talent-atlas-v2',saved]]:[]);
   if(legacy)storage.set('talent-atlas-v1',legacy);
@@ -50,8 +50,8 @@ async function app({year=2026,saved,legacy,bootstrap=fixture(year),fetchFailure=
   class FixedDate extends Date {constructor(...args){super(...(args.length?args:[`${year}-11-10T12:00:00-08:00`]))}static now(){return new Date(`${year}-11-10T12:00:00-08:00`).getTime()}}
   class TestURL extends URL {static createObjectURL(blob){downloads.push(blob);return 'blob:test-download'}static revokeObjectURL(){}}
   class FormValues {constructor(form){this.values=form.values}get(name){return this.values[name]??''}getAll(name){const value=this.values[name];return Array.isArray(value)?value:value?[value]:[]}}
-  const document={activeElement:null,getElementById:node,querySelector(){return null},querySelectorAll(selector){return selections.get(selector)||[]},addEventListener(type,handler){listeners.set(type,handler)},createElement(){return {click(){},href:'',download:''}}};
-  const context=vm.createContext({document,window:{scrollTo(){}},Date:FixedDate,URL:TestURL,Blob,FormData:FormValues,console,AbortSignal,...(indexedDB?{indexedDB}:{}),
+  const document={baseURI:'https://gabbyxia.github.io/Candidate-Agent/',activeElement:null,getElementById:node,querySelector(){return null},querySelectorAll(selector){return selections.get(selector)||[]},addEventListener(type,handler){listeners.set(type,handler)},createElement(){return {click(){},href:'',download:''}}};
+  const context=vm.createContext({document,window:{scrollTo(){}},...(staticMode?{TALENT_ATLAS_STATIC:{researchedProfiles:bootstrap.candidates.filter(c=>c.academicResearch).length,...snapshotConfig}}:{}),Date:FixedDate,URL:TestURL,Blob,FormData:FormValues,console,AbortSignal,...(indexedDB?{indexedDB}:{}),
     setTimeout(){return 1},clearTimeout(){},
     fetch:async(path)=>{fetches.push(path);if(path==='/network-research.json')return {ok:false,json:async()=>({})};if(fetchFailure)throw new Error('Fixture source unavailable');return {ok:true,json:async()=>structuredClone(bootstrap)}},
     localStorage:{getItem(key){return storage.get(key)??null},setItem(key,value){storage.set(key,value)},removeItem(key){storage.delete(key)}},
@@ -264,7 +264,7 @@ test('profile text escapes markup and source links reject executable protocols',
   ui.run("state.candidates[0].name='<script>alert(1)</script>';profile('test:source-author-0')");assert.doesNotMatch(ui.node('overlay-root').innerHTML,/<script>alert/);
 });
 
-test('academic proposals do not affect filters until cited fields are reviewed',async()=>{
+test('displaying academic proposals leaves accepted and manual facts unchanged until review',async()=>{
  const ui=await app({bootstrap:academicFixture()});
  assert.equal(ui.run('target(state.candidates[0])'),false);assert.equal(ui.json('state.candidates[0].status'),'Unknown');
  const result=ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentAffiliation','currentStatus','degree','programStartYear','researchInterests'])");assert.equal(result.ok,true);
@@ -301,4 +301,95 @@ test('faculty, unknown and unresearched authors remain visible in the initial al
 
 test('program-start metric and chart clicks use cited display dates without accepting proposal facts',async()=>{
  const data=academicFixture(),ui=await app({bootstrap:data});assert.equal(ui.run('appDisplayProgram(state.candidates[0]).programStartYear'),2024);assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),null);assert.match(ui.node('pipeline').innerHTML,/2024/);ui.click('metric',{metric:'programStart'});assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('state.programStart'),'cited');assert.equal(ui.json('matchList().length'),1);ui.click('year',{year:'2024'});assert.equal(ui.json('state.tab'),'all');assert.equal(ui.json('state.programStart'),'2024');assert.equal(ui.json('matchList().length'),1);assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.run('Boolean(state.candidates[0].academicProfile)'),false);
+});
+
+
+test('cited professional roles appear in status cells, profile, filters, search and CSV without acceptance',async()=>{
+ const ui=await app({bootstrap:academicFixture(),staticMode:true});
+ const roles=['Faculty','Professor','Assistant professor','Associate professor','Researcher','Postdoctoral researcher','Postdoc','Industry researcher','Research engineer','Engineer','Graduated','Other academic role','Other'];
+ for(const role of roles){
+  ui.run(`state.candidates[0].academicResearch.academic.currentStatus.value=${JSON.stringify(role)};state.status='all';state.query=''`);
+  assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),role);
+  assert.match(ui.run('table(state.candidates)'),new RegExp(role));
+  assert.match(ui.run('cards(state.candidates)'),/Cited proposal · unreviewed/);
+  ui.run(`state.status=${JSON.stringify(role)}`);assert.equal(ui.json('matchList().length'),1);
+  ui.run(`state.status='all';state.query=${JSON.stringify(role.toLowerCase())}`);assert.equal(ui.json('matchList().length'),1);
+  assert.equal(ui.run('appDisplayProgram(state.candidates[0]).programStartYear'),null);
+  assert.equal(ui.run('appProgramText(state.candidates[0])'),['Other','Other academic role'].includes(role)?'Unknown':'No current student program established');
+ }
+ ui.run("state.query='';state.candidates[0].academicResearch.academic.currentStatus.value='Faculty';profile(state.candidates[0].id);exportCSV(false,true)");
+ assert.match(ui.node('overlay-root').innerHTML,/>Faculty<\/span>/);assert.match(ui.node('overlay-root').innerHTML,/Cited proposal · unreviewed/);
+ const csv=await ui.downloads[0].text();assert.match(csv,/"Cited academic status","Academic-status review state","Academic-status source URLs"/);assert.match(csv,/"Faculty","proposed"/);
+ assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.run('Boolean(state.candidates[0].academicProfile)'),false);
+ assert.equal(ui.fetches.length,1);assert.match(ui.fetches[0],/snapshot\/bootstrap.json/);
+});
+
+test('unmatched, noncanonical or incompletely cited professional statuses remain Unknown',async()=>{
+ const base=academicFixture();base.candidates[0].academicResearch.academic.currentStatus.value='Faculty';
+ const ui=await app({bootstrap:base});
+ const changes=[
+  "r.candidateId='another-author'",
+  "r.identity.status='ambiguous'",
+  "r.identity.matchedPaperIds=['another-paper']",
+  "r.identity.sourceIds=[]",
+  "r.identity.sourceIds.push('missing-identity-citation')",
+  "r.academic.currentStatus.sourceIds.push('missing-status-citation')",
+  "r.academic.currentStatus.sourceIds=[]",
+  "r.academic.currentStatus.basis='unknown'",
+  "r.academic.currentStatus.value='Faculty with unsupported biographical qualifier'",
+  "r.sources.forEach(s=>s.url='http://example.edu/profile')",
+  "r.sources.forEach(s=>s.evidenceExcerpt='')",
+ ];
+ for(const change of changes){ui.run(`state.candidates[0].academicResearch=${JSON.stringify(base.candidates[0].academicResearch)};{const r=state.candidates[0].academicResearch;${change}}`);assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),'Unknown',change);assert.equal(ui.run('academicStatusEvidence(state.candidates[0])'),null,change)}
+ assert.equal(ui.json('matchList().length'),1);
+});
+
+test('static source import preserves newer local proposals and manual or reviewed facts',async()=>{
+ const data=academicFixture(),ui=await app({bootstrap:data,staticMode:true});
+ const later=structuredClone(data.candidates[0].academicResearch);later.queriedAt='2027-01-01T00:00:00Z';later.academic.currentStatus.value='Researcher';
+ ui.run(`state.candidates[0].academicResearch=${JSON.stringify(later)};applyCollection(${JSON.stringify(data)})`);
+ assert.equal(ui.json('state.candidates[0].academicResearch.queriedAt'),later.queriedAt);assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),'Researcher');
+ ui.run(`state.candidates[0].academicResearch=${JSON.stringify(data.candidates[0].academicResearch)};applyReviewedAcademicFields(state.candidates[0].id,['currentStatus','degree','programStartYear'])`);
+ const reviewed=ui.json('state.candidates[0].academicProfile');const incoming=structuredClone(data);incoming.candidates[0].academicResearch=later;
+ ui.run(`applyCollection(${JSON.stringify(incoming)})`);
+ assert.deepEqual(ui.json('state.candidates[0].academicProfile'),reviewed);assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),data.candidates[0].academicResearch.academic.currentStatus.value);assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),2024);
+ ui.run("state.candidates[0].evidence={sourceUrl:'https://example.edu/manual',addedAt:'2026-11-10'};state.candidates[0].status='Faculty';state.candidates[0].degree=null;state.candidates[0].startYear=null");
+ ui.run(`applyCollection(${JSON.stringify(incoming)})`);assert.equal(ui.json('state.candidates[0].status'),'Faculty');assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.run('appProgramText(state.candidates[0])'),'Unknown');
+});
+
+test('legacy reviewed identity sources survive replacement of their raw proposal',async()=>{
+ const data=academicFixture(),ui=await app({bootstrap:data,staticMode:true});
+ const r=data.candidates[0].academicResearch,field=r.academic.currentStatus;
+ ui.run(`state.candidates[0].academicProfile={identity:${JSON.stringify(r.identity)},fields:{currentStatus:${JSON.stringify(field)}},sources:${JSON.stringify(r.sources.filter(s=>field.sourceIds.includes(s.id)))}};state.candidates[0].status='PhD student'`);
+ const incoming=structuredClone(data);incoming.candidates[0].academicResearch.queriedAt='2027-01-01T00:00:00Z';incoming.candidates[0].academicResearch.identity.sourceIds=['new-source-id'];incoming.candidates[0].academicResearch.academic.currentStatus.value='Faculty';
+ ui.run(`applyCollection(${JSON.stringify(incoming)})`);
+ assert.equal(ui.run('academicStatusEvidence(state.candidates[0]).level'),'reviewed');assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),field.value);assert.ok(ui.json('state.candidates[0].academicProfile.identity.sourceIds.every(id=>id.startsWith("https://"))'));
+});
+
+
+test('static coverage notice distinguishes partial lookup progress from available cited fields',async()=>{
+ const metadata={researchedProfiles:7,researchCheckpoints:[{cohortId:'network-test',checkpointAt:'2026-11-11T12:00:00Z',complete:false,researchGroups:31,completedLookups:11,pendingLookups:12,inProgress:1,rateLimitedLookups:3,uncertainLookups:3,pausedLookups:1}],factCoverage:{academicStatuses:5,specificStatuses:4,currentAffiliations:6,currentProgramStarts:2}};
+ const ui=await app({staticMode:true,snapshotConfig:metadata});const notice=ui.run('publishedNetworkingNotice()');
+ assert.match(notice,/7 published academic profile-research results/);assert.match(notice,/3 collected author records/);assert.match(notice,/Networking lookup coverage is partial: 11 of 31 author groups completed/);assert.match(notice,/12 pending, 1 in progress, 3 rate-limited, 3 uncertain, 1 held/);assert.match(notice,/Checkpoint 2026-11-11/);assert.match(notice,/5 academic statuses · 4 specific professional roles · 6 current affiliations · 2 current-program starts/);assert.match(notice,/completed lookup can still leave individual facts Unknown/);assert.equal(ui.json('matchList().length'),3);
+});
+
+test('Unknown reasons distinguish unpublished lookup, ambiguous identity and missing academic sources',async()=>{
+ const ui=await app({staticMode:true});assert.match(ui.run('table(state.candidates)'),/No profile research published for this record/);assert.match(ui.run('cards(state.candidates)'),/No profile research published for this record/);ui.run('profile(state.candidates[0].id)');assert.match(ui.node('overlay-root').innerHTML,/No profile research published for this record/);
+ const data=academicFixture();data.candidates[0].academicResearch.identity.status='ambiguous';ui.run(`applyCollection(${JSON.stringify(data)})`);assert.match(ui.run('academicStatusHtml(state.candidates[0])'),/Identity ambiguous; academic facts withheld/);assert.match(ui.run('appProgramNote(state.candidates[0])'),/Identity ambiguous/);
+ data.candidates[0].academicResearch.identity.status='unresolved';ui.run(`state.candidates=[];applyCollection(${JSON.stringify(data)})`);assert.match(ui.run('academicStatusHtml(state.candidates[0])'),/Identity unresolved/);
+ data.candidates[0].academicResearch.identity.status='matched';data.candidates[0].academicResearch.academic.currentStatus.sourceIds=[];ui.run(`state.candidates=[];applyCollection(${JSON.stringify(data)})`);assert.match(ui.run('academicStatusHtml(state.candidates[0])'),/Academic role not established by cited evidence/);
+ assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].startYear'),null);
+});
+
+test('missing current degree and start sources have distinct explanations without borrowing old credentials',async()=>{
+ const data=academicFixture(),ui=await app({bootstrap:data,staticMode:true});
+ ui.run('state.candidates[0].academicResearch.academic.programStartYear.value=null');assert.equal(ui.run('appDisplayProgram(state.candidates[0]).currentDegree'),'PhD');ui.run('profile(state.candidates[0].id)');assert.match(ui.node('overlay-root').innerHTML,/Current degree program: <b>PhD<\/b>/);assert.equal(ui.json('state.candidates[0].degree'),null);assert.equal(ui.run('appProgramNote(state.candidates[0])'),'Current program start not source-stated.');assert.equal(ui.run('appProgramText(state.candidates[0])'),'Unknown');
+ ui.run('state.candidates[0].academicResearch.academic.degree.value=null');assert.equal(ui.run('appProgramNote(state.candidates[0])'),'Current degree not source-stated.');
+ ui.run(`state.candidates[0].academicResearch=${JSON.stringify(data.candidates[0].academicResearch)};state.candidates[0].academicResearch.academic.currentStatus.value='Faculty'`);assert.equal(ui.run('appDisplayStatus(state.candidates[0])'),'Faculty');assert.equal(ui.run('appDisplayProgram(state.candidates[0]).programStartYear'),null);assert.match(ui.run('appProgramNote(state.candidates[0])'),/no current student program established/);assert.equal(ui.json('state.candidates[0].startYear'),null);
+});
+
+test('normal CSV columns include displayed cited facts without accepting them',async()=>{
+ const data=academicFixture(),ui=await app({bootstrap:data,staticMode:true});ui.run('exportCSV(false,true)');
+ const rows=(await ui.downloads[0].text()).trim().split(/\r?\n/).map(row=>[...row.matchAll(/"((?:[^"]|"")*)"/g)].map(m=>m[1].replaceAll('""','"'))),headers=rows[0],first=rows[1];
+ assert.equal(first[headers.indexOf('Academic status')],data.candidates[0].academicResearch.academic.currentStatus.value);assert.equal(first[headers.indexOf('Current degree program')],'PhD');assert.equal(first[headers.indexOf('Current program start year')],'2024');assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].degree'),null);assert.equal(ui.json('state.candidates[0].startYear'),null);
 });

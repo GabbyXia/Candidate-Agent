@@ -1,0 +1,10 @@
+{
+  "artifacts": [
+    {
+      "file": "network-academic-profiles.json",
+      "kind": "academic_profiles",
+      "title": "Networking academic research checkpoint",
+      "description": "Source-cited public academic facts from the saved networking checkpoint. Original query dates, partial coverage and unknown fields remain explicit."
+    }
+  ]
+}
