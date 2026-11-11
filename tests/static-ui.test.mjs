@@ -8,7 +8,7 @@ const catalog=(await readFile(new URL('../shared/catalog.js',import.meta.url),'u
 const publisher=JSON.parse(await readFile(new URL('../data/usenix.json',import.meta.url),'utf8'));
 const pilot=JSON.parse(await readFile(new URL('../data/academic-research.json',import.meta.url),'utf8'));
 const seeds=JSON.parse(await readFile(new URL('../data/source-plans.json',import.meta.url),'utf8'));
-const base='https://gabbyxia.github.io/Candidate-Agent-/';
+const base='https://gabbyxia.github.io/Candidate-Agent/';
 
 async function application(){
   const paper=publisher.papers.find(p=>p.id===pilot.profiles[0].identity.matchedPaperIds[0]);

@@ -58,10 +58,10 @@ test('Pages build retains the complete dated research snapshot and works below a
     assert.match(html, /data-default-view="overview"/);
     assert.ok(html.indexOf('snapshot-config.js') < html.indexOf('runtime.js'));
     assert.doesNotMatch(html, /(?:src|href)=["']\/(?!\/)/);
-    const base = 'https://gabbyxia.github.io/Candidate-Agent-/';
+    const base = 'https://gabbyxia.github.io/Candidate-Agent/';
     for (const [, href] of html.matchAll(/(?:src|href)=["']([^"']+)["']/g)) {
       if (!href.startsWith('./')) continue;
-      assert.equal(new URL(href, base).pathname.startsWith('/Candidate-Agent-/'), true);
+      assert.equal(new URL(href, base).pathname.startsWith('/Candidate-Agent/'), true);
       assert.ok((await readFile(resolve(output, href))).length > 0);
     }
     const context = { window: {} };
@@ -69,7 +69,7 @@ test('Pages build retains the complete dated research snapshot and works below a
     assert.equal(context.window.TALENT_ATLAS_STATIC.publishedAt, publishedAt);
     assert.equal(result.artifacts.length >= 4, true);
     for (const artifact of result.artifacts) {
-      assert.equal(new URL(artifact.href, base).pathname.startsWith('/Candidate-Agent-/downloads/'), true);
+      assert.equal(new URL(artifact.href, base).pathname.startsWith('/Candidate-Agent/downloads/'), true);
       assert.equal((await readFile(resolve(output, artifact.href))).length, artifact.bytes);
     }
     const workbook = await readFile(resolve(output, 'downloads/talent-atlas-research.xlsx'));

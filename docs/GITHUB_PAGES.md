@@ -1,8 +1,8 @@
 # GitHub Pages publication
 
-Repository: https://github.com/GabbyXia/Candidate-Agent-
+Repository: https://github.com/GabbyXia/Candidate-Agent
 
-Site: https://gabbyxia.github.io/Candidate-Agent-/
+Site: https://gabbyxia.github.io/Candidate-Agent/
 
 GitHub Pages publishes the static snapshot on the normal `github.io` domain.
 
@@ -72,4 +72,4 @@ python3 -m http.server 4174 --directory dist-pages
 ```
 
 Open http://localhost:4174. Assets and snapshot requests use relative URLs so the
-same build also works at the GitHub project subpath `/Candidate-Agent-/`.
+same build also works at the GitHub project subpath `/Candidate-Agent/`.

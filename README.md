@@ -4,9 +4,9 @@ A campus research sourcing dashboard built around official conference proceeding
 
 ## GitHub Pages snapshot
 
-The [published research dashboard](https://gabbyxia.github.io/Candidate-Agent-/) is a static version of the checked-in papers and cited research proposals. It supports browsing, filtering, local shortlists/evidence review, and JSON/Excel downloads. Live research and saved server runs remain in the full application.
+The [published research dashboard](https://gabbyxia.github.io/Candidate-Agent/) is a static version of the checked-in papers and cited research proposals. It supports browsing, filtering, local shortlists/evidence review, and JSON/Excel downloads. Live research and saved server runs remain in the full application.
 
-The GitHub Actions workflow builds and publishes updated snapshots on pushes to `main` in [GabbyXia/Candidate-Agent-](https://github.com/GabbyXia/Candidate-Agent-). It makes no model calls and does not upload local run results, caches, credentials, or database state. See [Pages setup and updates](docs/GITHUB_PAGES.md).
+The GitHub Actions workflow builds and publishes updated snapshots on pushes to `main` in [GabbyXia/Candidate-Agent](https://github.com/GabbyXia/Candidate-Agent). It makes no model calls and does not upload local run results, caches, credentials, or database state. See [Pages setup and updates](docs/GITHUB_PAGES.md).
 
 ```sh
 npm run build:pages
