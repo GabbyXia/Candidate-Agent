@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir, rm, readdir, realpath, stat, copyFile } fro
 import { resolve, relative, extname, basename, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { createHash } from 'node:crypto';
 import { handleApi } from '../worker/api.mjs';
 import { DOMAINS, CONFERENCES } from '../shared/catalog.js';
 
@@ -74,6 +75,7 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
   const proposals = new Map((pilot.profiles || []).map(profile => [profile.candidateId, profile]));
   for (const candidate of bootstrap.candidates) if (proposals.has(candidate.id)) candidate.academicResearch = proposals.get(candidate.id);
   bootstrap.publication = { publishedAt, sourceRetrievedAt: bootstrap.coverage?.retrievedAt || sourceSnapshot.retrievedAt || null, mode: 'static_snapshot' };
+  bootstrap.criteria = { ...(bootstrap.criteria || {}), dateMode: 'current_program_start', programStartYearFrom: null, programStartYearTo: null, targetGraduationYear: null };
 
   await prepareOutput(output, root);
   await Promise.all(['snapshot', 'downloads', 'downloads/published'].map(path => mkdir(resolve(output, path), { recursive: true })));
@@ -83,12 +85,13 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
     if (!entry.isFile() || !(entry.name === 'index.html' || ['.js', '.css'].includes(extname(entry.name)))) continue;
     if (entry.name !== 'index.html') await copyFile(resolve(ui, entry.name), resolve(output, entry.name));
   }
-  const html = (await readFile(resolve(ui, 'index.html'), 'utf8'))
+  let html = (await readFile(resolve(ui, 'index.html'), 'utf8'))
     .replace(/\b(src|href)=(['"])\/(?!\/)([^'"]+)\2/g, '$1=$2./$3$2')
     .replace(/data-default-view="[^"]*"/, 'data-default-view="overview"')
     .replace(/<script\b/, '<script src="./snapshot-config.js" defer></script>\n  <script');
-  await writeFile(resolve(output, 'index.html'), html);
   await writeFile(resolve(output, 'catalog.js'), (await readFile(resolve(root, 'shared/catalog.js'), 'utf8')).replace(/^export /gm, ''));
+  const currentProgram = (await readFile(resolve(root, 'shared/current-program.js'), 'utf8')).replace(/^export /gm, '');
+  await writeFile(resolve(output, 'current-program.js'), currentProgram);
   await Promise.all([
     writeFile(resolve(output, 'snapshot/bootstrap.json'), json(bootstrap)),
     writeFile(resolve(output, 'snapshot/profile-pilot.json'), json(pilot)),
@@ -99,22 +102,35 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
 
   const artifacts = [];
   async function artifact(filename, title, description, content, type, directory = 'downloads') {
-    const href = directory + '/' + filename;
-    await writeFile(resolve(output, href), content);
+    const path = directory + '/' + filename;
+    await writeFile(resolve(output, path), content);
+    const href = path + '?v=' + createHash('sha256').update(content).digest('hex').slice(0, 16);
     artifacts.push({ title, description, href, filename, type, bytes: Buffer.byteLength(content) });
   }
   await artifact('talent-atlas-snapshot.json', 'Complete research snapshot', `${bootstrap.papers.length.toLocaleString('en-US')} papers and ${bootstrap.candidates.length.toLocaleString('en-US')} provisional author profiles, with source coverage and dated research proposals.`, json(bootstrap), 'JSON');
-  const context = { TextEncoder };
-  vm.runInNewContext(await readFile(resolve(ui, 'mapping-export.js'), 'utf8'), context, { filename: 'mapping-export.js' });
+  const context = { TextEncoder, URL };
+  vm.runInNewContext(currentProgram + '\n' + await readFile(resolve(ui, 'mapping-export.js'), 'utf8'), context, { filename: 'mapping-export.js' });
   const workbook = context.buildMappingWorkbook(bootstrap, { id: 'published-snapshot', state: 'published_snapshot', stage: 'export_ready', createdAt: publishedAt, updatedAt: publishedAt, input: { role: bootstrap.coverage?.role, keywords: 'network, networking, congestion, routing, transport, datacenter' } });
   await artifact('talent-atlas-research.xlsx', 'Research workbook', 'All published profiles, papers, source citations, coverage, and review status in an Excel workbook.', Buffer.from(workbook), 'XLSX');
   await artifact('academic-research.json', 'Academic research pilot', 'Four dated, source-cited academic profile proposals. Findings remain unreviewed.', json(pilot), 'JSON');
   await artifact('source-plans.json', 'Published source plans', 'Checked-in source plan versions and their original validation evidence.', json(sourcePlans), 'JSON');
   for (const entry of additions) await artifact(entry.filename, entry.title, entry.description, entry.content, entry.type, 'downloads/published');
-  const config = { ...bootstrap.publication, papers: bootstrap.papers.length, candidates: bootstrap.candidates.length, editions: bootstrap.coverage?.editions?.length || 0, artifacts };
+  const snapshotVersion = createHash('sha256').update(json(bootstrap)).digest('hex').slice(0, 16);
+  const config = { ...bootstrap.publication, snapshotVersion, papers: bootstrap.papers.length, candidates: bootstrap.candidates.length, editions: bootstrap.coverage?.editions?.length || 0, artifacts };
   // Escaping angle brackets keeps generated configuration safe if a published
   // artifact title happens to contain HTML or a script-closing sequence.
   await writeFile(resolve(output, 'snapshot-config.js'), 'window.TALENT_ATLAS_STATIC=' + JSON.stringify(config).replace(/</g, '\\u003c') + ';\n');
+  // Pages caches assets independently. Content versions keep one deployment's
+  // HTML, shared evidence rules, UI code and styles on the same revision.
+  const assetPattern = /\b(src|href)=(['"])(\.\/[^'"?#]+\.(?:js|css))\2/g;
+  const versions = new Map();
+  for (const [, , , href] of html.matchAll(assetPattern)) {
+    const asset = resolve(output, href);
+    if (!inside(output, asset)) throw Error('Browser assets must stay inside the static output.');
+    versions.set(href, createHash('sha256').update(await readFile(asset)).digest('hex').slice(0, 16));
+  }
+  html = html.replace(assetPattern, (match, attribute, quote, href) => `${attribute}=${quote}${href}?v=${versions.get(href)}${quote}`);
+  await writeFile(resolve(output, 'index.html'), html);
   return { outputDir: output, ...config };
 }
 

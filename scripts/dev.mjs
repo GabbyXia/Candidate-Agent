@@ -19,6 +19,7 @@ const server = createServer(async(req,res)=>{
     const path=new URL(request.url).pathname;
     if(path==='/runtime.js'){res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end(await readFile(new URL('runtime.js',root),'utf8'));return}
     if(path==='/catalog.js'){res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end((await readFile(new URL('../shared/catalog.js',import.meta.url),'utf8')).replace(/^export /gm,''));return}
+    if(path==='/current-program.js'){res.writeHead(200,{'Content-Type':'application/javascript; charset=utf-8'});res.end((await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,''));return}
     const files={'/':['index.html','text/html'],'/index.html':['index.html','text/html'],'/app.css':['app.css','text/css'],'/app.js':['app.js','application/javascript'],'/profile-research.js':['profile-research.js','application/javascript'],'/profile-research.css':['profile-research.css','text/css'],'/source-plans.js':['source-plans.js','application/javascript'],'/source-plans.css':['source-plans.css','text/css'],'/mapping-run.js':['mapping-run.js','application/javascript'],'/mapping-export.js':['mapping-export.js','application/javascript'],'/mapping-run.css':['mapping-run.css','text/css']};
     if(!files[path]){res.writeHead(404);res.end('Not found');return}
     const [file,type]=files[path];res.writeHead(200,{'Content-Type':type+'; charset=utf-8','Cache-Control':'no-cache'});res.end(await readFile(new URL(file,root)));

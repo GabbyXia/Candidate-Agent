@@ -9,7 +9,11 @@ function atlasFetch(input,options={}){
   const json=(data,status=200)=>Promise.resolve(new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json'}}));
   if(method!=='GET'&&method!=='HEAD')return json({ok:false,status:'snapshot_only',error:'This is a published research snapshot. Run new research separately and publish the updated results.'},405);
   const files={'/api/bootstrap':'bootstrap.json','/api/catalog':'catalog.json','/api/profile-research/pilot':'profile-pilot.json','/api/source-plans':'source-plans.json'};
-  if(files[path])return fetch(new URL('snapshot/'+files[path],document.baseURI).href,options);
+  if(files[path]){
+    const target=new URL('snapshot/'+files[path],document.baseURI),version=globalThis.TALENT_ATLAS_STATIC.snapshotVersion||globalThis.TALENT_ATLAS_STATIC.publishedAt;
+    if(version)target.searchParams.set('v',version);
+    return fetch(target.href,{...options,cache:'no-cache'});
+  }
   if(path==='/api/profile-research/status')return json({configured:false,missing:[],maxBatchSize:0,snapshot:true});
   if(path==='/api/source-plans/status')return json({storageAvailable:false,modelConfigured:false,missing:[],adapters:[],snapshot:true});
   if(path==='/api/status')return json({aiConfigured:false,aiStatus:'snapshot_only',sources:[],snapshot:true});

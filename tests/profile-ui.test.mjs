@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 
+const programCode=(await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,'');
 const source=(await readFile(new URL('../ui/runtime.js', import.meta.url), 'utf8')) + '\n' + await readFile(new URL('../ui/profile-research.js',import.meta.url),'utf8');
 const metadata=JSON.parse(await readFile(new URL('../data/usenix.json',import.meta.url),'utf8'));
 const authors=metadata.papers.flatMap(p=>p.authors.map(a=>({author:a,paper:p})));
 function candidates(count=2){return authors.slice(0,count).map(({author,paper},i)=>({id:'test:author-'+i,name:author.name,affiliation:author.affiliations.join('; '),status:'Unknown',interests:[],gradYear:null,gradRange:null,papers:[structuredClone(paper)],sources:[],isSample:false}))}
-function proposal(id,{identity='matched'}={}){const cited={sourceIds:['source-1'],asOf:'2026-11-10',confidence:'high',basis:'source_stated'};return {candidateId:id,identity:{status:identity,confidence:identity==='matched'?'high':'low',matchedPaperIds:[metadata.papers[0].id],sourceIds:['source-1'],rationale:'The academic source lists the same paper and coauthors.'},academic:{currentAffiliation:{...cited,value:'Test university source value'},currentStatus:{...cited,value:'PhD student'},researchInterests:{...cited,value:['Distributed systems']},degree:{...cited,value:'PhD'},programStartYear:{...cited,value:2022},expectedGraduationYear:{...cited,value:2027}},sources:[{id:'source-1',url:'https://example.edu/profile',title:'Academic profile test source',sourceDate:'2026-11-10',evidenceExcerpt:'A short academic source excerpt for the test harness.'}],warnings:[],queriedAt:'2026-11-10T20:00:00Z',requiresHumanReview:true}}
+function proposal(id,{identity='matched'}={}){const cited={sourceIds:['source-1'],asOf:'2026-11-10',confidence:'high',basis:'source_stated'};return {candidateId:id,identity:{status:identity,confidence:identity==='matched'?'high':'low',matchedPaperIds:[metadata.papers[0].id],sourceIds:['source-1'],rationale:'The academic source lists the same paper and coauthors.'},academic:{currentAffiliation:{...cited,value:'Test university source value'},currentStatus:{...cited,value:'PhD student'},researchInterests:{...cited,value:['Distributed systems']},degree:{...cited,value:'PhD'},programStartYear:{...cited,value:2022},expectedGraduationYear:{...cited,value:2027}},sources:[{id:'source-1',url:'https://example.edu/profile',title:'Academic profile test source',sourceDate:'2026-11-10',evidenceExcerpt:'PhD student since 2022.'}],warnings:[],queriedAt:'2026-11-10T20:00:00Z',requiresHumanReview:true}}
 function response(data,status=200){return {ok:status>=200&&status<300,status,json:async()=>structuredClone(data)}}
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}}
 async function tick(){await new Promise(resolve=>setImmediate(resolve))}
@@ -25,7 +26,7 @@ async function app({records=candidates(),queue=[],configured=true,missing=[],pil
     async applyReviewedAcademicFields(id,fields){accepts.push({id,fields:[...fields]});if(acceptResult?.ok===false)return acceptResult;const c=state.candidates.find(c=>c.id===id);c.academicProfile={fields:Object.fromEntries(fields.map(key=>[key,c.academicResearch.academic[key]])),sources:c.academicResearch.sources,reviewed:true};return {ok:true,acceptedFields:fields,manualPreserved:Boolean(c.evidence)}},
     async fetch(path,options){calls.push({path,body:options?.body?JSON.parse(options.body):null});if(path==='/api/profile-research/status')return response({configured,missing,maxBatchSize:25});if(path==='/api/profile-research/pilot')return response(pilot);if(path==='/api/enrich'){const body=JSON.parse(options.body);return enrich?await enrich(body,calls):response({ok:true,status:'needs_review',research:proposal(body.candidateId)})}throw Error('Unexpected test request')},
   });
-  vm.runInContext(source,context,{filename:'ui/profile-research.js'});await tick();
+  vm.runInContext(programCode+'\n'+source,context,{filename:'ui/profile-research.js'});await tick();
   const run=code=>vm.runInContext(code,context),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
   const click=(action,id)=>{const element={dataset:{action,id}};return listeners.get('click')({target:{closest(){return element}},preventDefault(){}})};
   return {state,run,json,node,selectors,calls,accepts,toasts,persisted,click,get renderCount(){return renderCount}};
@@ -87,7 +88,7 @@ test('source research stays a proposal and preserves manual and reviewed facts',
 test('ambiguous identity disables field acceptance despite populated source claims',async()=>{
   const records=candidates();records[0].academicResearch=proposal(records[0].id,{identity:'ambiguous'});
   const ui=await app({records});ui.run("openProfileResearchReview('test:author-0')");
-  const html=ui.node('overlay-root').innerHTML;assert.match(html,/cannot be accepted until/);assert.equal([...html.matchAll(/name="pr-review-field"[^>]*disabled/g)].length,6);
+  const html=ui.node('overlay-root').innerHTML;assert.match(html,/cannot be accepted until/);assert.equal([...html.matchAll(/name="pr-review-field"[^>]*disabled/g)].length,5);
   ui.selectors.set('input[name="pr-review-field"]:checked',[{value:'currentStatus'}]);await ui.run("PR_accept('test:author-0')");assert.equal(ui.accepts.length,0);
 });
 
@@ -99,7 +100,7 @@ test('acceptance requires a non-null field with an actual source URL',async()=>{
 test('review submits only eligible fields to root helper and records human review',async()=>{
   const records=candidates();records[0].academicResearch=proposal(records[0].id);records[0].evidence={sourceUrl:'https://example.edu/manual'};
   const ui=await app({records});ui.selectors.set('input[name="pr-review-field"]:checked',[{value:'expectedGraduationYear'},{value:'currentStatus'},{value:'unrecognizedField'}]);
-  await ui.run("PR_accept('test:author-0')");assert.deepEqual(ui.accepts[0].fields,['expectedGraduationYear','currentStatus']);assert.equal(ui.state.profileQueue[0].state,'resolved');assert.ok(ui.state.candidates[0].academicResearch.reviewedAt);assert.match(ui.toasts.at(-1),/manual academic evidence retained priority/);
+  await ui.run("PR_accept('test:author-0')");assert.deepEqual(ui.accepts[0].fields,['currentStatus']);assert.equal(ui.state.profileQueue[0].state,'resolved');assert.ok(ui.state.candidates[0].academicResearch.reviewedAt);assert.match(ui.toasts.at(-1),/manual academic evidence retained priority/);
 });
 
 test('rejected root review leaves proposal unresolved and displays the reason',async()=>{

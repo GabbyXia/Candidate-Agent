@@ -11,6 +11,7 @@ for (const [name,type] of [['index.html','text/html; charset=utf-8'],['app.css',
 const catalog = await readFile(new URL('shared/catalog.js',root),'utf8');
 assets['/runtime.js'] = { type: 'application/javascript; charset=utf-8', content: await readFile(new URL('ui/runtime.js',root),'utf8') };
 assets['/catalog.js'] = { type: 'application/javascript; charset=utf-8', content: catalog.replace(/^export /gm,'') };
+assets['/current-program.js'] = { type: 'application/javascript; charset=utf-8', content: (await readFile(new URL('shared/current-program.js',root),'utf8')).replace(/^export /gm,'') };
 const snapshots = await Promise.all(['usenix','networking'].map(async name=>JSON.parse(await readFile(new URL('data/'+name+'.json',root),'utf8'))));
 const sourceSnapshot = {papers:snapshots.flatMap(s=>s.papers),editions:snapshots.flatMap(s=>s.editions||(Array.isArray(s.coverage)?s.coverage:s.coverage?.editions)||[]),warnings:snapshots.flatMap(s=>s.warnings||[]),retrievedAt:snapshots.map(s=>s.retrievedAt||s.collectedAt||s.coverage?.retrievedAt).filter(Boolean).sort().at(-1)};
 const academicSnapshot = JSON.parse(await readFile(new URL('data/academic-research.json',root),'utf8'));

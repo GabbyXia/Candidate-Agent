@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 import {DOMAINS,CONFERENCES} from '../shared/catalog.js';
 
+const programCode=(await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,'');
 const source=(await readFile(new URL('../ui/runtime.js', import.meta.url), 'utf8')) + '\n' + await readFile(new URL('../ui/mapping-run.js',import.meta.url),'utf8');
 const publisher=JSON.parse(await readFile(new URL('../data/usenix.json',import.meta.url),'utf8'));
 const technicalDirection='Datacenter networking and congestion control';
@@ -39,7 +40,7 @@ async function app({runs=[],advance,route,exportError=false,timerMode='real'}={}
       throw Error('Unexpected test request '+path);
     },
   });
-  vm.runInContext(source,context,{filename:'ui/mapping-run.js'});await tick();
+  vm.runInContext(programCode+'\n'+source,context,{filename:'ui/mapping-run.js'});await tick();
   const evalCode=code=>vm.runInContext(code,context),json=code=>JSON.parse(evalCode(`JSON.stringify(${code})`));
   const click=(action,extra={})=>{const element={dataset:{action,...extra}};return listeners.get('click')({target:{closest(){return element}},preventDefault(){}})};
   return {state,server,node,calls,toasts,collections,exports,timerDelays,modalCalls,run:evalCode,json,click,listeners,get renders(){return renders}};
@@ -62,7 +63,7 @@ test('replanning a new direction does not turn previous automatic suggestions in
 
 test('start saves professional scope and advances until backend completed',async()=>{
   const ui=await app();await ui.click('mr-plan');await ui.click('mr-start');
-  const created=ui.calls.find(c=>c.path==='/api/mapping-runs'&&c.body);assert.equal(created.body.criteria.includeUnknown,true);assert.equal(created.body.criteria.targetGraduationYear,2027);assert.equal(created.body.conferenceIds.length,4);assert.equal(ui.server.advanceCount,1);assert.equal(ui.json('MR_state.run.status'),'completed');assert.match(ui.run('mappingRunWorkspace()'),/backend reports this run complete/);
+  const created=ui.calls.find(c=>c.path==='/api/mapping-runs'&&c.body);assert.equal(created.body.criteria.includeUnknown,true);assert.equal(created.body.criteria.targetGraduationYear,null);assert.equal(created.body.criteria.dateMode,'current_program_start');assert.equal(created.body.criteria.programStartYearFrom,null);assert.equal(created.body.conferenceIds.length,4);assert.equal(ui.server.advanceCount,1);assert.equal(ui.json('MR_state.run.status'),'completed');assert.match(ui.run('mappingRunWorkspace()'),/backend reports this run complete/);
 });
 
 test('connection-required profile stage keeps real source results and stops advancing',async()=>{
@@ -115,7 +116,7 @@ test('changed direction invalidates the preview and oversized or long-year scope
 
 test('array screening outcomes aggregate all records and display source-backed professional facts',async()=>{
   const ui=await app({runs:[run('connection_required')]});await ui.run("MR_open('mapping-1')");assert.deepEqual(ui.json('MR_screening()'),{matched:1,review:1,excluded:1});
-  assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).status'),'PhD student');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).graduation'),'2027');assert.match(ui.run('MR_resultsView()'),/needs review/);
+  assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).status'),'PhD student');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).programStart'),'Unknown');assert.match(ui.run('MR_resultsView()'),/needs review/);
 });
 
 test('canonical nested metadata and task counters show planned authors and uncertain attempts',async()=>{
@@ -130,7 +131,7 @@ test('lightweight updates merge cited profile research and screening without a f
   const ui=await app();ui.run('MR_accept('+JSON.stringify({run:{...run('running'),revision:1},progress:progress(),result:result()})+')');
   const candidate={...result().candidates[0],academicResearch:{identity:{status:'matched'},academic:{currentStatus:{value:'PhD student',basis:'source_stated',sourceIds:['profile']}},sources:[{id:'profile',url:'https://example.edu/profile'}]}},screened={candidateId:candidate.id,outcome:'matches_criteria',professionalFacts:{identityStatus:'matched',currentStatus:'PhD student',expectedGraduationYear:2027,researchFit:90,requiresHumanReview:true,sources:['https://example.edu/profile']}};
   ui.run('MR_accept('+JSON.stringify({run:{...run('running'),revision:2},progress:progress({completed:1,queued:2}),updates:{candidates:[candidate],stats:{matchesCriteria:1,needsReview:1,outsideCriteria:1},screening:[screened]}})+')');
-  assert.equal(ui.json('MR_state.result.candidates[0].academicResearch.identity.status'),'matched');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).status'),'PhD student');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).graduation'),'2027');assert.deepEqual(ui.json('MR_screening()'),{matched:1,review:1,excluded:1});assert.equal(ui.calls.filter(call=>call.path==='/api/mapping-runs/mapping-1').length,0);
+  assert.equal(ui.json('MR_state.result.candidates[0].academicResearch.identity.status'),'matched');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).status'),'PhD student');assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).programStart'),'Unknown');assert.deepEqual(ui.json('MR_screening()'),{matched:1,review:1,excluded:1});assert.equal(ui.calls.filter(call=>call.path==='/api/mapping-runs/mapping-1').length,0);
   assert.equal(ui.run('MR_accept('+JSON.stringify({run:{...run('running'),revision:1}})+')'),false);
 });
 
@@ -190,19 +191,12 @@ test('unresolved identity proposals are not attributed as the author’s academi
   await ui.click('mr-profile',{id:'test:author-0'});const html=ui.node('overlay-root').innerHTML;assert.match(html,/Academic status<\/span><strong>Unknown/);assert.match(html,/Unresolved identity claims are not attributed/);assert.doesNotMatch(html,/<strong>2031<\/strong>/);
 });
 
-test('identity-matched backend duration range appears in the read-only modal as a low-confidence assumption',async()=>{
-  const ui=await app({runs:[run('completed')]});await ui.run("MR_open('mapping-1')");
-  ui.run("MR_state.result.screening[0].professionalFacts={identityStatus:'matched',degree:'PhD',programStartYear:2021,expectedGraduationYear:null,graduationRange:[2026,2027],graduationBasis:'assumed_degree_duration',graduationConfidence:'low',sources:['https://example.edu/cv']};MR_state.result.assumptions=['A cited PhD start uses a 5–6-year planning assumption.','Program durations vary; verify the academic timeline.']");
-  assert.equal(ui.json('MR_state.result.candidates[0].gradRange'),null);await ui.click('mr-profile',{id:'test:author-0'});let html=ui.node('overlay-root').innerHTML;
-  assert.match(html,/Planning estimate: 2026–2027/);assert.match(html,/Low confidence · assumed degree duration/);assert.match(html,/not a source-stated graduation date/);assert.match(html,/Program durations vary/);assert.equal(ui.json('MR_state.result.candidates[0].gradRange'),null);
-  ui.run("MR_state.result.screening[0].professionalFacts.identityStatus='unresolved'");await ui.click('mr-profile',{id:'test:author-0'});html=ui.node('overlay-root').innerHTML;assert.doesNotMatch(html,/Planning estimate:/);
+test('legacy backend graduation estimates never become current-program start facts',async()=>{
+ const ui=await app({runs:[run('completed')]});await ui.run("MR_open('mapping-1')");ui.run("MR_state.result.screening[0].professionalFacts={identityStatus:'matched',degree:'PhD',programStartYear:2021,expectedGraduationYear:2028,graduationRange:[2026,2027],graduationBasis:'assumed_degree_duration',sources:['https://example.edu/cv']}");await ui.click('mr-profile',{id:'test:author-0'});const html=ui.node('overlay-root').innerHTML;assert.doesNotMatch(html,/Planning estimate|<strong>2028<\/strong>/);assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).programStart'),'Unknown');
 });
 
-test('explicit expected graduation and recruiter evidence take priority over backend duration estimates',async()=>{
-  const ui=await app({runs:[run('completed')]});await ui.run("MR_open('mapping-1')");
-  ui.run("MR_state.result.screening[0].professionalFacts={identityStatus:'matched',expectedGraduationYear:2028,graduationRange:[2026,2027],graduationBasis:'assumed_degree_duration',graduationConfidence:'low',sources:['https://example.edu/cv']}");await ui.click('mr-profile',{id:'test:author-0'});assert.doesNotMatch(ui.node('overlay-root').innerHTML,/Planning estimate:/);assert.match(ui.node('overlay-root').innerHTML,/<strong>2028<\/strong>/);assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).graduation'),'2028');
-  ui.run("Object.assign(MR_state.result.candidates[0],{evidence:{sourceUrl:'https://example.edu/manual'},gradRange:[2030,2031],expectedExplicit:false,durationMin:3,durationMax:4})");await ui.click('mr-profile',{id:'test:author-0'});assert.match(ui.node('overlay-root').innerHTML,/Planning estimate: 2030–2031/);assert.doesNotMatch(ui.node('overlay-root').innerHTML,/Planning estimate: 2026–2027/);
-  ui.run("Object.assign(MR_state.result.candidates[0],{expectedExplicit:true,gradYear:2032,gradRange:[2032,2032]})");await ui.click('mr-profile',{id:'test:author-0'});assert.doesNotMatch(ui.node('overlay-root').innerHTML,/Planning estimate:/);assert.match(ui.node('overlay-root').innerHTML,/<strong>2032<\/strong>/);
+test('a source-cited ongoing degree start is displayed without copying it into accepted or forecast fields',async()=>{
+ const ui=await app({runs:[run('completed')]});await ui.run("MR_open('mapping-1')");ui.run("{const c=MR_state.result.candidates[0],field=value=>({value,basis:'source_stated',sourceIds:['cv']});c.academicResearch={candidateId:c.id,identity:{status:'matched',matchedPaperIds:c.paperIds,sourceIds:['cv']},academic:{currentStatus:field('PhD student'),degree:field('PhD'),programStartYear:field(2024)},sources:[{id:'cv',url:'https://example.edu/cv',evidenceExcerpt:'PhD student since 2024.'}]}}");await ui.click('mr-profile',{id:'test:author-0'});assert.match(ui.node('overlay-root').innerHTML,/Source-stated current program start year/);assert.match(ui.node('overlay-root').innerHTML,/<strong>2024<\/strong>/);assert.equal(ui.run('MR_candidateFacts(MR_state.result.candidates[0]).programStart'),'2024');assert.equal(ui.json('MR_state.result.candidates[0].gradRange'),null);
 });
 
 test('scheduled source retry backoff is honored before unchanged-progress stopping',async()=>{

@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, readFile, readdir, writeFile, rm, symlink } from 'node:
 import { resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import vm from 'node:vm';
+import { createHash } from 'node:crypto';
 import { buildPages } from '../scripts/build-pages.mjs';
 
 const projectRoot = new URL('../', import.meta.url);
@@ -28,6 +29,14 @@ function zipFile(bytes, filename) {
     offset = start + length;
   }
   throw Error('Missing workbook entry ' + filename);
+}
+function workbookRows(bytes, filename) {
+  const decode = value => value.replace(/&(amp|lt|gt|quot|apos);/g, (_, name) => ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'"})[name]);
+  const strings = [...zipFile(bytes, 'xl/sharedStrings.xml').matchAll(/<si>([\s\S]*?)<\/si>/g)].map(match => [...match[1].matchAll(/<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g)].map(text => decode(text[1])).join(''));
+  return [...zipFile(bytes, filename).matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)].map(row => Object.fromEntries([...row[1].matchAll(/<c\b([^>]*)>([\s\S]*?)<\/c>/g)].map(cell => {
+    const column = cell[1].match(/\br="([A-Z]+)\d+"/)[1], value = cell[2].match(/<v>([\s\S]*?)<\/v>/)?.[1] ?? '';
+    return [column, /\bt="s"/.test(cell[1]) ? strings[Number(value)] : decode(value)];
+  })));
 }
 
 test('Pages build retains the complete dated research snapshot and works below a repository path without network access', async () => {
@@ -57,25 +66,39 @@ test('Pages build retains the complete dated research snapshot and works below a
     const html = await readFile(resolve(output, 'index.html'), 'utf8');
     assert.match(html, /data-default-view="overview"/);
     assert.ok(html.indexOf('snapshot-config.js') < html.indexOf('runtime.js'));
+    assert.ok(html.indexOf('current-program.js') < html.indexOf('app.js'));
     assert.doesNotMatch(html, /(?:src|href)=["']\/(?!\/)/);
     const base = 'https://gabbyxia.github.io/Candidate-Agent/';
     for (const [, href] of html.matchAll(/(?:src|href)=["']([^"']+)["']/g)) {
       if (!href.startsWith('./')) continue;
-      assert.equal(new URL(href, base).pathname.startsWith('/Candidate-Agent/'), true);
-      assert.ok((await readFile(resolve(output, href))).length > 0);
+      const address = new URL(href, base);
+      assert.equal(address.pathname.startsWith('/Candidate-Agent/'), true);
+      const content = await readFile(resolve(output, address.pathname.slice('/Candidate-Agent/'.length)));
+      assert.ok(content.length > 0);
+      if (/\.(?:js|css)$/.test(address.pathname)) assert.equal(address.searchParams.get('v'), createHash('sha256').update(content).digest('hex').slice(0, 16));
     }
     const context = { window: {} };
     vm.runInNewContext(await readFile(resolve(output, 'snapshot-config.js'), 'utf8'), context);
     assert.equal(context.window.TALENT_ATLAS_STATIC.publishedAt, publishedAt);
+    assert.match(context.window.TALENT_ATLAS_STATIC.snapshotVersion, /^[a-f0-9]{16}$/);
+    assert.equal(bootstrap.criteria.dateMode, 'current_program_start');
     assert.equal(result.artifacts.length >= 4, true);
     for (const artifact of result.artifacts) {
-      assert.equal(new URL(artifact.href, base).pathname.startsWith('/Candidate-Agent/downloads/'), true);
-      assert.equal((await readFile(resolve(output, artifact.href))).length, artifact.bytes);
+      const address = new URL(artifact.href, base), content = await readFile(resolve(output, address.pathname.slice('/Candidate-Agent/'.length)));
+      assert.equal(address.pathname.startsWith('/Candidate-Agent/downloads/'), true);
+      assert.equal(content.length, artifact.bytes);
+      assert.equal(address.searchParams.get('v'), createHash('sha256').update(content).digest('hex').slice(0, 16));
     }
     const workbook = await readFile(resolve(output, 'downloads/talent-atlas-research.xlsx'));
     assert.equal(workbook.readUInt32LE(0), 0x04034b50);
     assert.match(zipFile(workbook, 'xl/workbook.xml'), /name="Candidates"/);
     assert.match(zipFile(workbook, 'xl/worksheets/sheet2.xml'), /dimension ref="A1:AB6848"/);
+    const candidateRows = workbookRows(workbook, 'xl/worksheets/sheet2.xml'), headers = Object.values(candidateRows[0]);
+    assert.ok(headers.includes('Source-stated current program start year'));
+    assert.doesNotMatch(headers.join(' | '), /graduat|Estimated/i);
+    const supportedRows = candidateRows.slice(1).filter(row => row.K === 'source_stated_current_program');
+    assert.equal(supportedRows.length, 2, 'The public pilot has two cited current-program start years.');
+    for (const row of supportedRows) assert.equal(row.I, '2024');
     assert.match(zipFile(workbook, 'xl/worksheets/sheet5.xml'), /dimension ref="A1:N1201"/);
     const files = await tree(output);
     assert.ok(files.includes('.nojekyll'));

@@ -4,12 +4,13 @@ import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 
+const programCode=(await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,'');
 const root=new URL('../',import.meta.url),code=await readFile(new URL('ui/mapping-export.js',root),'utf8');
 const snapshots=await Promise.all(['usenix','networking'].map(async name=>JSON.parse(await readFile(new URL('data/'+name+'.json',root),'utf8'))));
 const allPapers=snapshots.flatMap(s=>s.papers),pilot=JSON.parse(await readFile(new URL('data/academic-research.json',root),'utf8'));
 const names=['Yusheng Zheng','Zhiqiang Lv','Nimesha Wickramasinghe','Tianyuan Wu'];
-const run={id:'mapping-run-real-sources',state:'completed',stage:'export_ready',createdAt:'2026-11-10T20:00:00Z',updatedAt:'2026-11-10T21:00:00Z',input:{domain:'systems',role:'Systems Researcher',keywords:'distributed systems,networking',criteria:{targetGraduationYear:2027}}};
-function writer(extra={}){const context=vm.createContext({TextEncoder,Uint8Array,Uint32Array,DataView,Date,Map,Set,URL,Blob,setTimeout,...extra});vm.runInContext(code,context,{filename:'ui/mapping-export.js'});return context}
+const run={exportLegacyGraduation:true,id:'mapping-run-real-sources',state:'completed',stage:'export_ready',createdAt:'2026-11-10T20:00:00Z',updatedAt:'2026-11-10T21:00:00Z',input:{domain:'systems',role:'Systems Researcher',keywords:'distributed systems,networking',criteria:{targetGraduationYear:2027}}};
+function writer(extra={}){const context=vm.createContext({TextEncoder,Uint8Array,Uint32Array,DataView,Date,Map,Set,URL,Blob,setTimeout,...extra});vm.runInContext(programCode+'\n'+code,context,{filename:'ui/mapping-export.js'});return context}
 function fixture(){
  const candidates=pilot.profiles.map((research,index)=>{const papers=allPapers.filter(p=>research.identity.matchedPaperIds.includes(p.id)),name=names[index],affiliation=papers.flatMap(p=>p.authors).find(a=>a.name===name)?.affiliations.join('; ')||'Not published';return {id:research.candidateId,name,affiliation,affiliationLabel:'Published affiliation',status:'Unknown',degree:null,startYear:null,gradYear:null,gradRange:null,paperIds:papers.map(p=>p.id),academicResearch:structuredClone(research),fit:50,fitReason:'A lexical research-keyword match.',interests:[],sources:[]}});
  const papers=[...new Map(candidates.flatMap(c=>c.paperIds).map(id=>[id,allPapers.find(p=>p.id===id)])).values()];
@@ -80,4 +81,12 @@ test('independentopenpyxl reader roundtrips realworkbook, ZIPCRC, dates, texttyp
 });
 test('independentopenpyxl reader preserves source-stated date and unsafe formula-prefixtext asstrings',{skip:python.status!==0},()=>{
  const result=fixture();result.candidates[0].name='=SUM(1,2)';const bytes=writer().buildMappingWorkbook(result,run),script='import sys,io,json,openpyxl,datetime\nw=openpyxl.load_workbook(io.BytesIO(sys.stdin.buffer.read()),data_only=False)\ns=w["Candidates"];h={c.value:c.column for c in s[1]}\nassert s.cell(2,h["Name"]).value=="=SUM(1,2)"\nassert s.cell(2,h["Name"]).data_type=="s"\nassert s.cell(5,h["Academic source as of"]).value==datetime.datetime(2026,9,24)\nassert s.freeze_panes=="C2"\nassert s.auto_filter.ref\nprint(json.dumps({"literal":True,"date":True,"freeze":s.freeze_panes}))';const checked=spawnSync('python3',['-c',script],{input:Buffer.from(bytes),encoding:'utf8',timeout:30000});assert.equal(checked.status,0,checked.stderr);assert.equal(JSON.parse(checked.stdout).literal,true);
+});
+
+test('default workbook exports current-degree starts and omits graduation forecasts',()=>{
+ const currentRun={...run,exportLegacyGraduation:false},result=fixture(),wb=workbook(writer().buildMappingWorkbook(result,currentRun)),sheet=wb.sheets.get('Candidates');assert.ok(sheet.headers.includes('Source-stated current program start year'));assert.ok(sheet.headers.includes('Current degree program'));assert.ok(sheet.headers.every(header=>!/graduat|estimated/i.test(header)));assert.equal(sheet.records.filter(row=>row['Source-stated current program start year']===2024).length,2);assert.ok(wb.sheets.get('Sources').records.every(row=>!/graduat/i.test(row.Field)));assert.equal(sheet.records.length,result.candidates.length);
+});
+
+test('current-mode export never substitutes legacy graduation or raw uncited degree years',()=>{
+ const result=fixture(),candidate=result.candidates[0];candidate.gradYear=2027;candidate.gradRange=[2027,2028];candidate.startYear=2010;candidate.academicResearch.academic.programStartYear.sourceIds=[];const wb=workbook(writer().buildMappingWorkbook(result,{...run,exportLegacyGraduation:false}));assert.equal(wb.sheets.get('Candidates').records[0]['Source-stated current program start year'],'Unknown');assert.equal(candidate.gradYear,2027);assert.equal(candidate.startYear,2010);
 });

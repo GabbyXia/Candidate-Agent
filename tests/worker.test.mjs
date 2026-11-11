@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 const source=await readFile(new URL('../dist/server/index.js',import.meta.url),'utf8');
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+test('serves the shared current-program browser helper required by the updated entry point',async()=>{
+ const response=await worker.fetch(new Request('https://example.test/current-program.js'));assert.equal(response.status,200);const code=await response.text();assert.match(code,/function currentProgramFacts/);assert.doesNotMatch(code,/^export /m);
+});
 test('serves the application and embedded assets with appropriate content types',async()=>{
  for(const [path,type,text]of [['/','text/html','Talent Atlas'],['/app.css','text/css','.sidebar'],['/app.js','application/javascript','function render()'],['/profile-research.js','application/javascript','profileResearchWorkspace'],['/profile-research.css','text/css','.pr-'],['/source-plans.js','application/javascript','sourcePlanWorkspace'],['/source-plans.css','text/css','.sp-'],['/mapping-run.js','application/javascript','mappingRunWorkspace'],['/mapping-run.css','text/css','.mr-'],['/mapping-export.js','application/javascript','buildMappingWorkbook']]){
   const response=await worker.fetch(new Request('https://example.test'+path));assert.equal(response.status,200);assert.ok(response.headers.get('content-type').includes(type));assert.ok((await response.text()).includes(text));

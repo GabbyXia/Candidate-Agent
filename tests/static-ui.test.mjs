@@ -5,6 +5,7 @@ import vm from 'node:vm';
 
 const scripts=await Promise.all(['runtime','app','profile-research','source-plans','mapping-run'].map(name=>readFile(new URL('../ui/'+name+'.js',import.meta.url),'utf8')));
 const catalog=(await readFile(new URL('../shared/catalog.js',import.meta.url),'utf8')).replace(/^export /gm,'');
+const currentProgram=(await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,'');
 const publisher=JSON.parse(await readFile(new URL('../data/usenix.json',import.meta.url),'utf8'));
 const pilot=JSON.parse(await readFile(new URL('../data/academic-research.json',import.meta.url),'utf8'));
 const seeds=JSON.parse(await readFile(new URL('../data/source-plans.json',import.meta.url),'utf8'));
@@ -24,9 +25,9 @@ async function application(){
     document:{baseURI:base,activeElement:null,getElementById:node,querySelector(){return null},querySelectorAll(){return []},createElement(){return {click(){}}},addEventListener(type,listener){if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(listener)}},
     window:{scrollTo(){}},setTimeout(){return 1},clearTimeout(){},
     localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
-    fetch:async(path,options)=>{requests.push({path,method:options?.method||'GET'});assert.ok(path.startsWith(base+'snapshot/'),'static requests must remain under the repository snapshot path');const data=files[path.split('/').at(-1)];assert.ok(data,'unexpected snapshot file');return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}})},
+    fetch:async(path,options)=>{requests.push({path,method:options?.method||'GET',cache:options?.cache});assert.ok(path.startsWith(base+'snapshot/'),'static requests must remain under the repository snapshot path');const data=files[new URL(path).pathname.split('/').at(-1)];assert.ok(data,'unexpected snapshot file');return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}})},
   });
-  vm.runInContext(catalog+'\n'+scripts.join('\n'),context,{filename:'static-ui'});
+  vm.runInContext(catalog+'\n'+currentProgram+'\n'+scripts.join('\n'),context,{filename:'static-ui'});
   for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));
   const run=code=>vm.runInContext(code,context);
   const click=async(action,extra={})=>{const element={dataset:{action,...extra}};for(const listener of listeners.get('click')||[])await listener({target:{closest(){return element}},preventDefault(){}})};
@@ -42,7 +43,8 @@ test('static UI loads published data under the project path and refreshes stale 
   const html=ui.node('app').innerHTML;
   assert.match(html,/Published research snapshot/);
   assert.doesNotMatch(html,/Start a mapping run|data-action="open-mapping-run"|data-action="open-research"/);
-  assert.ok(ui.requests.some(request=>request.path===base+'snapshot/bootstrap.json'));
+  assert.ok(ui.requests.some(request=>new URL(request.path).pathname==='/Candidate-Agent/snapshot/bootstrap.json'));
+  for(const request of ui.requests){assert.equal(new URL(request.path).searchParams.get('v'),'2026-11-11T12:00:00Z');assert.equal(request.cache,'no-cache');}
 });
 
 test('published research, source plans, and download views contain no live launch controls',async()=>{

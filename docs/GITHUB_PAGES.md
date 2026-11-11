@@ -14,6 +14,13 @@ The Downloads screen includes the complete JSON snapshot, Excel workbook, academ
 research pilot, and validated source plans. Proposals retain their original source
 dates and review state; rebuilding does not imply fresh research.
 
+The interface and default Excel export use the first enrollment year of the
+current degree program. Cited proposal dates remain labeled unreviewed; missing
+or unsupported dates remain Unknown. Historical graduation fields can remain in
+the archived source JSON, but do not populate the start-year view. This public
+snapshot is separate from private research runs and does not copy their data
+automatically.
+
 Visitors can search, filter, browse publication evidence, review proposals, keep
 browser-local shortlists/evidence, and download exports. Local edits do not update
 the published snapshot. Browser storage from the previous host does not transfer
@@ -26,6 +33,9 @@ server runs.
 It verifies the saved source records, builds with Node 22, checks the static build,
 and deploys the generated `dist-pages/` through GitHub Pages. No API key, npm package
 installation, server, or model connection is required to build the static version.
+
+The builder adds content versions to scripts, styles, snapshot requests, and
+downloads so browsers load matching files after publication.
 
 The repository's Settings → Pages → Source must be **GitHub Actions**. The source
 repository can remain private with an eligible GitHub plan; the Pages publication

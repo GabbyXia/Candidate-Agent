@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { handleApi } from '../worker/api.mjs';
 
+const programCode=(await readFile(new URL('../shared/current-program.js',import.meta.url),'utf8')).replace(/^export /gm,'');
 const source = (await readFile(new URL('../ui/runtime.js', import.meta.url), 'utf8')) + '\n' + await readFile(new URL('../ui/app.js', import.meta.url), 'utf8');
 const catalog = (await readFile(new URL('../shared/catalog.js', import.meta.url), 'utf8')).replaceAll('export const ', 'const ');
 
@@ -52,10 +53,10 @@ async function app({year=2026,saved,legacy,bootstrap=fixture(year),fetchFailure=
   const document={activeElement:null,getElementById:node,querySelector(){return null},querySelectorAll(selector){return selections.get(selector)||[]},addEventListener(type,handler){listeners.set(type,handler)},createElement(){return {click(){},href:'',download:''}}};
   const context=vm.createContext({document,window:{scrollTo(){}},Date:FixedDate,URL:TestURL,Blob,FormData:FormValues,console,AbortSignal,...(indexedDB?{indexedDB}:{}),
     setTimeout(){return 1},clearTimeout(){},
-    fetch:async(path)=>{fetches.push(path);if(fetchFailure)throw new Error('Fixture source unavailable');return {ok:true,json:async()=>structuredClone(bootstrap)}},
+    fetch:async(path)=>{fetches.push(path);if(path==='/network-research.json')return {ok:false,json:async()=>({})};if(fetchFailure)throw new Error('Fixture source unavailable');return {ok:true,json:async()=>structuredClone(bootstrap)}},
     localStorage:{getItem(key){return storage.get(key)??null},setItem(key,value){storage.set(key,value)},removeItem(key){storage.delete(key)}},
   });
-  vm.runInContext(catalog+'\n'+source,context,{filename:'ui/app.js'});
+  vm.runInContext(programCode+'\n'+catalog+'\n'+source,context,{filename:'ui/app.js'});
   for(let i=0;i<5;i++)await new Promise(resolve=>setImmediate(resolve));
   const run=code=>vm.runInContext(code,context),json=code=>JSON.parse(run(`JSON.stringify(${code})`));
   const click=(action,extra={})=>{const target={dataset:{action,...extra}};listeners.get('click')({target:{closest(){return target}},preventDefault(){}})};
@@ -64,14 +65,14 @@ async function app({year=2026,saved,legacy,bootstrap=fixture(year),fetchFailure=
 
 test('initial workspace loads source-backed papers and keeps academic status unknown',async()=>{
   const ui=await app();
-  assert.deepEqual(ui.fetches,['/api/bootstrap']);
+  assert.deepEqual(ui.fetches,['/api/bootstrap','/network-research.json']);
   assert.match(ui.node('app').innerHTML,/Official proceedings/);
   assert.doesNotMatch(ui.node('app').innerHTML,/Sample workspace|synthetic people/);
   assert.equal(ui.json('state.candidates.length'),3);
   assert.ok(ui.json('state.candidates.every(c=>!c.isSample&&c.gradYear===null&&c.status==="Unknown")'));
   assert.equal(ui.json('state.papers.length'),3);
   assert.equal(ui.json('state.loading'),false);
-  assert.ok(ui.node('results').innerHTML.includes(sourceAuthors[0].name));
+  assert.equal(ui.json('state.tab'),'students');assert.match(ui.node('results').innerHTML,/No cited current-student leads/);
 });
 
 test('full production bootstrap hydrates every paper and thousands of author records into the UI',async()=>{
@@ -84,7 +85,7 @@ test('full production bootstrap hydrates every paper and thousands of author rec
   assert.ok(ui.json('state.candidates.length')>6000);
   assert.ok(ui.json('state.candidates.every(c=>c.papers.length===c.paperIds.length)'));
   assert.ok(ui.json('state.candidates.every(c=>c.status==="Unknown"&&c.gradYear===null)'));
-  assert.match(ui.node('landscape').innerHTML,/All researchers aggregated/);
+  assert.match(ui.node('landscape').innerHTML,/Author records in the current view aggregated/);
   assert.ok(ui.storage.get('talent-atlas-v2').length<5000);
   ui.click('nav',{view:'papers'});
   assert.match(ui.node('app').innerHTML,/1200/);
@@ -116,7 +117,7 @@ test('normalized persistence stores each paper once and restores candidate refer
   assert.equal(saved.version,2);assert.equal(saved.papers.length,3);
   assert.ok(saved.candidates.every(c=>Array.isArray(c.paperIds)&&!Object.hasOwn(c,'papers')));
   const restored=await app({saved:JSON.stringify(saved)});
-  assert.deepEqual(restored.fetches,[]);
+  assert.deepEqual(restored.fetches,['/network-research.json']);
   assert.equal(restored.json('state.candidates[0].papers.length'),1);
   assert.equal(restored.run('state.candidates[0].papers[0]===state.candidates[1].papers[0]'),true);
 });
@@ -127,46 +128,41 @@ test('IndexedDB stores full metadata while localStorage keeps small preferences'
   assert.equal(preferences.dataInIndexedDB,true);assert.equal(Object.hasOwn(preferences,'papers'),false);assert.equal(Object.hasOwn(preferences,'candidates'),false);
   const cached=indexedDB.records.get('current');assert.equal(cached.papers.length,3);assert.ok(cached.candidates.every(c=>Array.isArray(c.paperIds)&&!Object.hasOwn(c,'papers')));
   const restored=await app({saved:JSON.stringify(preferences),indexedDB,fetchFailure:true});
-  assert.deepEqual(restored.fetches,[]);assert.equal(restored.json('state.papers.length'),3);assert.equal(restored.json('state.candidates[0].name'),sourceAuthors[0].name);
+  assert.deepEqual(restored.fetches,['/network-research.json']);assert.equal(restored.json('state.papers.length'),3);assert.equal(restored.json('state.candidates[0].name'),sourceAuthors[0].name);
 });
 
 test('latest evidence survives source refresh and IndexedDB reload without stale overrides',async()=>{
   const indexedDB=memoryIndexedDB(),ui=await app({indexedDB}),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';
-  form.values={affiliation:sourceAuthors[0].affiliations.join('; '),status:'PhD student',startYear:'',expected:'2027',duration:'5,6',sourceUrl:'https://example.edu/cv'};
-  ui.run('saveEvidence()');form.values={...form.values,expected:'2028'};ui.run('saveEvidence()');
+  form.values={affiliation:sourceAuthors[0].affiliations.join('; '),status:'PhD student',degree:'PhD',startYear:'2024',programStatement:'PhD student since 2024.',identityConfirmed:'on',sourceUrl:'https://example.edu/cv'};
+  ui.run('saveEvidence()');form.values={...form.values,startYear:'2025',programStatement:'PhD student since 2025.'};ui.run('saveEvidence()');
   ui.run(`applyCollection(${JSON.stringify(fixture())})`);await ui.run('persistenceQueue');
-  assert.equal(ui.json('state.candidates[0].gradYear'),2028);
-  const preferences=JSON.parse(ui.storage.get('talent-atlas-v2'));assert.equal(preferences.overrides[0].gradYear,2028);
+  assert.equal(ui.json('state.candidates[0].startYear'),2025);
+  const preferences=JSON.parse(ui.storage.get('talent-atlas-v2'));assert.equal(preferences.overrides[0].startYear,2025);
   const restored=await app({saved:JSON.stringify(preferences),indexedDB,fetchFailure:true});
-  assert.equal(restored.json('state.candidates[0].gradYear'),2028);assert.equal(restored.json('state.candidates[0].evidence.sourceUrl'),'https://example.edu/cv');
+  assert.equal(restored.json('state.candidates[0].startYear'),2025);assert.equal(restored.json('state.candidates[0].evidence.sourceUrl'),'https://example.edu/cv');
 });
 
 test('cache write failure preserves recruiter evidence in small local preferences',async()=>{
   const indexedDB=memoryIndexedDB({failWrites:true}),ui=await app({indexedDB}),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';
-  form.values={affiliation:sourceAuthors[0].affiliations.join('; '),status:'PhD student',startYear:'',expected:'2027',duration:'5,6',sourceUrl:'https://example.edu/cv'};
+  form.values={affiliation:sourceAuthors[0].affiliations.join('; '),status:'PhD student',degree:'PhD',startYear:'2024',programStatement:'PhD student since 2024.',identityConfirmed:'on',sourceUrl:'https://example.edu/cv'};
   ui.run('saveEvidence()');await ui.run('persistenceQueue');
-  const preferences=JSON.parse(ui.storage.get('talent-atlas-v2'));assert.equal(preferences.overrides[0].gradYear,2027);
-  const restored=await app({saved:JSON.stringify(preferences),indexedDB});assert.deepEqual(restored.fetches,['/api/bootstrap']);assert.equal(restored.json('state.candidates[0].gradYear'),2027);
+  const preferences=JSON.parse(ui.storage.get('talent-atlas-v2'));assert.equal(preferences.overrides[0].startYear,2024);
+  const restored=await app({saved:JSON.stringify(preferences),indexedDB});assert.deepEqual(restored.fetches,['/api/bootstrap','/network-research.json']);assert.equal(restored.json('state.candidates[0].startYear'),2024);
 });
 
-test('next-year cohort includes overlapping estimates while unknown timing stays excluded',async()=>{
-  const ui=await app();
-  assert.equal(ui.run('target({gradYear:2026,gradRange:[2026,2027]})'),true);
-  assert.equal(ui.run('target({gradYear:2027,gradRange:[2027,2028]})'),true);
-  assert.equal(ui.run('target({gradYear:2028,gradRange:[2028,2029]})'),false);
-  assert.equal(ui.run('target({gradYear:null,gradRange:null})'),false);
-  ui.run("state.tab='next'");assert.equal(ui.json('matchList().length'),0);
+test('current-program cohort never uses legacy graduation ranges or publication dates',async()=>{
+ const ui=await app();assert.equal(ui.run('target({gradYear:2027,gradRange:[2026,2027]})'),false);assert.equal(ui.run('rangeText({gradYear:2027,startYear:2022,degree:"PhD"})'),'Unknown');ui.run("state.tab='next'");assert.equal(ui.json('matchList().length'),0);assert.doesNotMatch(ui.run('dashboard()'),/Estimated graduation|EST. GRADUATION/);
 });
 
 test('search combines affiliation, expertise, status, conference and alignment filters',async()=>{
-  const ui=await app();
+  const ui=await app();ui.click('tab',{tab:'all'});
   ui.run("state.query='university of chicago'");assert.deepEqual(ui.json('matchList().map(c=>c.name)'),[sourceAuthors[2].name]);
   ui.run("state.query='';state.conf='OSDI';state.status='Unknown';state.minFit=85");assert.deepEqual(ui.json('matchList().map(c=>c.name)'),[sourceAuthors[0].name]);
-  ui.run("resetFilters(false);state.grad='unknown'");assert.equal(ui.json('matchList().length'),3);
+  ui.run("resetFilters(false);state.tab='all';state.programStart='unknown'");assert.equal(ui.json('matchList().length'),3);
 });
 
 test('sort actions reverse direction and alignment metric applies its threshold',async()=>{
-  const ui=await app();ui.click('sort',{sort:'name'});const ascending=ui.json('matchList().map(c=>c.name)');
+  const ui=await app();ui.click('tab',{tab:'all'});ui.click('sort',{sort:'name'});const ascending=ui.json('matchList().map(c=>c.name)');
   ui.click('sort',{sort:'name'});assert.deepEqual(ui.json('matchList().map(c=>c.name)'),[...ascending].reverse());
   ui.click('metric',{metric:'fit'});assert.equal(ui.json('state.minFit'),85);assert.deepEqual(ui.json('matchList().map(c=>c.id)'),['test:source-author-0']);
 });
@@ -190,19 +186,12 @@ test('source coverage presents listing counters and unavailable details explicit
   const html=ui.node('overlay-root').innerHTML;assert.match(html,/88 listed papers/);assert.match(html,/80 citation records/);assert.match(html,/8 details unavailable/);assert.match(html,/partial/);
 });
 
-test('evidence-derived graduation requires program start-year evidence',async()=>{
-  const ui=await app(),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';
-  form.values={affiliation:'Fixture University',status:'PhD student',startYear:'2022',expected:'',duration:'4,5',sourceUrl:'https://example.edu/profile'};
-  ui.run('saveEvidence()');assert.deepEqual(ui.json('state.candidates[0].gradRange'),[2026,2027]);assert.equal(ui.json('state.candidates[0].expectedExplicit'),false);
-  form.values={...form.values,startYear:''};ui.run('saveEvidence()');assert.equal(ui.json('state.candidates[0].gradYear'),null);
+test('manual current enrollment requires a cited quoted start and never computes graduation',async()=>{
+ const ui=await app(),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';form.values={affiliation:'Fixture University',status:'PhD student',degree:'PhD',startYear:'2022',programStatement:'PhD student since 2022.',identityConfirmed:'on',sourceUrl:'https://example.edu/cv'};ui.run('saveEvidence()');assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),2022);assert.equal(ui.json('state.candidates[0].gradRange'),null);const before=ui.json('state.candidates[0]');form.values={...form.values,startYear:'2017',programStatement:'Bachelor 2017–2021; PhD 2024–present.'};ui.run('saveEvidence()');assert.deepEqual(ui.json('state.candidates[0]'),before);
 });
 
-test('explicit graduation retains provenance and invalid duration causes no partial mutation',async()=>{
-  const ui=await app(),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';
-  form.values={affiliation:'Fixture University',status:'PhD student',startYear:'',expected:'2028',duration:'5,6',sourceUrl:'https://example.edu/cv'};
-  ui.run('saveEvidence()');assert.deepEqual(ui.json('state.candidates[0].gradRange'),[2028,2028]);assert.equal(ui.json('state.candidates[0].expectedExplicit'),true);
-  const before=ui.json('state.candidates[0]');form.values={affiliation:'Changed University',status:'Master’s student',startYear:'2025',expected:'',duration:'5,6',sourceUrl:'https://example.edu/profile'};
-  ui.run('saveEvidence()');assert.match(ui.node('e-error').textContent,/matches the selected degree/);assert.deepEqual(ui.json('state.candidates[0]'),before);
+test('manual current-year edits preserve old graduation data without displaying it',async()=>{
+ const ui=await app(),form=ui.node('evidence-form');form.dataset.id='test:source-author-0';ui.run('state.candidates[0].gradYear=2030;state.candidates[0].gradRange=[2030,2031]');form.values={affiliation:'Fixture University',status:'PhD student',degree:'PhD',startYear:'2024',programStatement:'PhD student since 2024.',identityConfirmed:'on',sourceUrl:'https://example.edu/cv'};ui.run('saveEvidence()');assert.equal(ui.json('state.candidates[0].gradYear'),2030);assert.equal(ui.run('rangeText(state.candidates[0])'),'2024');assert.doesNotMatch(ui.node('overlay-root').innerHTML,/Estimated graduation|2030|2031/);
 });
 
 test('finite catalog covers CS domains with valid many-to-many venue mappings',async()=>{
@@ -277,10 +266,10 @@ test('profile text escapes markup and source links reject executable protocols',
 test('academic proposals do not affect filters until cited fields are reviewed',async()=>{
  const ui=await app({bootstrap:academicFixture()});
  assert.equal(ui.run('target(state.candidates[0])'),false);assert.equal(ui.json('state.candidates[0].status'),'Unknown');
- const result=ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentAffiliation','currentStatus','degree','programStartYear','expectedGraduationYear','researchInterests'])");assert.equal(result.ok,true);
+ const result=ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentAffiliation','currentStatus','degree','programStartYear','researchInterests'])");assert.equal(result.ok,true);
  assert.equal(ui.json('state.candidates[0].affiliation'),'UC Santa Cruz');
  assert.equal(ui.run('displayAffiliation(state.candidates[0])'),'University of California, Santa Cruz');
- assert.equal(ui.json('state.candidates[0].status'),'PhD student');assert.equal(ui.run('target(state.candidates[0])'),true);assert.equal(ui.json('state.candidates[0].gradYear'),2027);
+ assert.equal(ui.json('state.candidates[0].status'),'PhD student');assert.equal(ui.run('target(state.candidates[0])'),true);assert.equal(ui.json('state.candidates[0].startYear'),2024);
  assert.ok(ui.json('state.candidates[0].academicProfile.sources.every(s=>s.id===s.url)'));
  assert.equal(ui.json('state.candidates[0].fit'),100);
 });
@@ -288,9 +277,9 @@ test('academic proposals do not affect filters until cited fields are reviewed',
 test('reviewed academic findings preserve manual evidence and survive source refresh',async()=>{
  const data=academicFixture(),ui=await app({bootstrap:data});
  ui.run("state.candidates[0].evidence={sourceUrl:'https://example.edu/manual',addedAt:'2026-11-10'};state.candidates[0].affiliation='Recruiter-entered institution';state.candidates[0].gradYear=2030;state.candidates[0].gradRange=[2030,2030]");
- const result=ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentAffiliation','expectedGraduationYear'])");assert.equal(result.ok,true);assert.equal(result.manualPreserved,true);
+ const result=ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentAffiliation','programStartYear'])");assert.equal(result.ok,true);assert.equal(result.manualPreserved,true);
  assert.equal(ui.run('displayAffiliation(state.candidates[0])'),'Recruiter-entered institution');assert.equal(ui.json('state.candidates[0].gradYear'),2030);
- ui.run('applyCollection('+JSON.stringify(data)+')');assert.equal(ui.json('state.candidates[0].academicProfile.fields.expectedGraduationYear.value'),2027);assert.equal(ui.json('state.candidates[0].gradYear'),2030);
+ ui.run('applyCollection('+JSON.stringify(data)+')');assert.equal(ui.json('state.candidates[0].academicProfile.fields.programStartYear.value'),2024);assert.equal(ui.json('state.candidates[0].gradYear'),2030);
 });
 
 test('ambiguous identity, unsupported fields, and missing citations cannot enter academic filters',async()=>{
@@ -299,4 +288,8 @@ test('ambiguous identity, unsupported fields, and missing citations cannot enter
  ui.run("state.candidates[0].academicResearch.identity.status='matched'");assert.equal(ui.json("applyReviewedAcademicFields(state.candidates[0].id,['nationality'])").ok,false);
  ui.run('state.candidates[0].academicResearch.academic.programStartYear.sourceIds=[]');assert.equal(ui.json("applyReviewedAcademicFields(state.candidates[0].id,['currentStatus','programStartYear'])").ok,false);
  assert.equal(ui.run('Boolean(state.candidates[0].academicProfile)'),false);assert.equal(ui.json('state.candidates[0].status'),'Unknown');assert.equal(ui.json('state.candidates[0].gradYear'),null);
+});
+
+test('active table and cited-year filter show unreviewed current-program evidence without accepting it',async()=>{
+ const ui=await app({bootstrap:academicFixture()});assert.match(ui.run('table(state.candidates)'),/CURRENT PROGRAM START/);assert.doesNotMatch(ui.run('table(state.candidates)'),/EST. GRADUATION|NEXT YEAR/);assert.equal(ui.run('appProgramText(state.candidates[0])'),'2024 · unreviewed');assert.equal(ui.run('appCurrentProgram(state.candidates[0]).programStartYear'),null);ui.run("state.programStart='cited'");assert.equal(ui.json('matchList().length'),1);assert.equal(ui.json('state.candidates[0].startYear'),null);assert.equal(ui.json('state.candidates[0].gradYear'),null);
 });
