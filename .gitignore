@@ -39,3 +39,6 @@ test-results/
 .dev.vars.*
 *.pem
 *.key
+
+# Retired hosting integration; publishing uses GitHub Pages.
+.openai/

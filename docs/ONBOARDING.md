@@ -1,12 +1,14 @@
 # Talent Atlas onboarding guide
 
-This guide explains how Talent Atlas turns a technical hiring direction into a source-linked map of research authors. It is for new recruiters, researchers, and engineers who need to operate the app, interpret its results, or maintain its components.
+Talent Atlas deploys only to GitHub Pages. The published website is a static research snapshot for browsing, evidence review, browser-local shortlists, and downloads. Start with the published dashboard or run `npm run build` and `npm run dev` to preview it locally. Publishing updated data refreshes the snapshot; browser-local reviews do not change it.
+
+This guide also explains the optional local research tools used to prepare new data. Sections 1–4 and 8 describe `npm run dev:local`; sections 5–7 distinguish the published snapshot from local saved runs. The local tools turn a technical hiring direction into a source-linked map of research authors. They are for maintainers operating the local server on their own computer.
 
 The workflow starts with official conference papers, creates provisional author records, researches public academic evidence, and groups those records against selected professional criteria. Its output is a research starting point for human review. A matching result can contain unreviewed findings, and a completed run can still have incomplete source coverage.
 
-Read sections 1–4 for the product workflow, sections 5–9 for evidence and operations, and sections 10–12 for engineering onboarding.
+Read section 5 for evidence interpretation, section 9 for bundled coverage, and sections 10–12 for engineering onboarding. See [GitHub Pages publication](GITHUB_PAGES.md) to publish a selected update. The local workflow is described below for maintainers who need to prepare new research.
 
-## 1 The system at a glance
+## 1 Optional local research at a glance
 
 ```text
 Technical direction and professional criteria
@@ -30,17 +32,17 @@ Identity and citation validation -> Evidence screening
 Saved run results -> Human review -> Excel export or dashboard handoff
 ```
 
-The browser presents the workflow and asks the server to advance it. The Worker is the server application: it validates requests, collects sources, calls the research model, and saves progress. D1 is its database for structured records. R2 is its object store for larger collections, research outputs, and checkpoints. A checkpoint is a saved result the run can resume from.
+When started with `npm run dev:local`, the browser presents the research workflow and asks the local server to advance it. The retained Worker modules validate requests, collect sources, call the research model, and save progress. The local server uses SQLite for structured records and local files for larger collections, research outputs, and checkpoints, all under ignored `outputs/local/`. A checkpoint is a saved result the local run can resume from. None of this server state is deployed to GitHub Pages.
 
 Two model-assisted jobs sit inside this workflow. The **source-discovery agent** proposes how to read a missing or changed official conference source. The **academic-profile agent** researches one author at a time. Conference recommendation, known-source parsing, provisional identity grouping, research-fit calculation, and outcome categorization run in ordinary application code.
 
-## 2 Your first mapping run
+## 2 Your first local mapping run
 
-Use a deliberately small conference/year scope for your first live run. Starting or resuming research can make paid API calls, and the unified run creates a task for every retained author.
+Start `npm run dev:local` before following this workflow. Use a deliberately small conference/year scope for your first live run. Starting or resuming research can make paid API calls, and the unified run creates a task for every retained author.
 
 1. **Describe the direction.** For example, enter “Datacenter networking and congestion control,” with research phrases `congestion control, RDMA`. The role label gives the run context; the research phrases drive publication matching.
 2. **Choose Recommend conferences.** For this example, the catalog recommends SIGCOMM, NSDI, CoNEXT, and IMC. Read the reasons and edit the selection. A recommendation does not guarantee that a source connector is available for every edition.
-3. **Set the publication window and criteria.** Choose one to three publication years, academic statuses, a target graduation year, and a minimum research-fit percentage. Publication years determine which papers to collect; the graduation target is a separate screening setting. The defaults use the current year and previous two years, with next year as the graduation target.
+3. **Set the publication window and criteria.** Choose one to three publication years, academic statuses, and a minimum research-fit percentage. The current-program start-year range is optional and starts blank. Publication years determine which papers to collect; they do not establish enrollment dates. The form defaults to the current year and previous two publication years, with no graduation target.
 4. **Start the mapping.** The app saves the run and begins bounded collection and profile-research tasks. Keep the run page open for continued advancement. Watch source notes and progress as results arrive.
 5. **Inspect the results.** Start with coverage, then review both “Matches professional criteria” and “Needs evidence review.” Select an author to inspect the identity rationale, academic facts, original source dates, and publication anchors. The saved-run profile is read-only.
 6. **Download Excel.** The workbook includes the full saved result, including authors hidden by the current search, outcome filter, or page. “View talent dashboard” opens the result in the advanced browser workspace for further work.
@@ -126,28 +128,30 @@ If you supply two phrases and one appears, the fit is 50 percent. The calculatio
 
 Each proposed field carries its value, source references, evidence date when stated, confidence, and basis. The research retrieval date tells you when the task ran; it is separate from the date of the evidence.
 
-Current affiliation and status supported only by dated evidence older than two years become unknown. Undated sources keep currentness unverified and cap confidence at medium for those fields. Missing evidence stays unknown. A successful model task can therefore finish without resolving the author's identity or graduation year.
+Current affiliation and status supported only by dated evidence older than two years become unknown. Undated sources keep currentness unverified and cap confidence at medium for those fields. Missing evidence stays unknown. A successful model task can therefore finish without resolving the author's identity or current program start year.
 
-### Graduation timing
+### Current degree program and start year
 
-The profile agent extracts explicitly stated degree dates. The downstream run aggregator can separately calculate a low-confidence planning range when both degree and program start year have cited evidence:
+The dashboard and default workbook use the first enrollment year of the person's ongoing current degree program. All author records remain visible by default; a cited start year is an optional filter, not a condition for inclusion. The shared evidence rules require the following:
 
-| Evidence | Run planning calculation |
+| Evidence | Display behavior |
 | --- | --- |
-| Explicit expected graduation year | Use the source-stated year; it overrides duration estimates |
-| PhD or doctorate plus start year | Start year plus 5–6 years |
-| Master's program plus start year | Start year plus 1–2 years |
-| Insufficient degree or start evidence | Keep graduation unknown |
+| Matched author identity, cited current student status, compatible current degree, and explicit start statement | Show the cited current-program start year with its review state |
+| Current program established but no supported start statement | Keep the start year Unknown |
+| Cited professional role without an established current student program | Show “No current student program established” |
+| Unresolved identity or insufficient current-program evidence | Keep current-program facts Unknown |
 
-These durations are visible assumptions, not promises about a person's program. For example, a cited 2022 PhD start gives a 2027–2028 planning range. Even if 2027 is the target, the estimated timing requires evidence review. An estimated range outside the target also remains uncertain rather than proving a definite graduation mismatch. Publication year is never used to guess graduation.
+Historical degrees, range-end years, employment dates, awards, and paper dates cannot supply a current enrollment date. A start year may be recovered only from an explicit, unique current-program statement already present in cited evidence. Displaying or filtering a proposal does not accept it as a reviewed fact. Manually entered and accepted evidence retain their review context and priority.
+
+The local research schema and older saved runs can retain explicitly stated expected graduation years and low-confidence duration-based planning ranges. Those historical fields do not populate the current-program start-year view or default workbook, and graduation estimates do not establish enrollment dates.
 
 ### Screening categories
 
 | Run label | Meaning |
 | --- | --- |
 | Matches professional criteria | Identity is matched and available source-stated findings satisfy the selected criteria; human review is still required |
-| Needs evidence review | Identity or requested evidence is unknown, ambiguous, or based on uncertain graduation timing |
-| Outside current criteria | At least one selected criterion definitely fails, such as fit below the threshold or a source-stated graduation year different from the target |
+| Needs evidence review | Identity or requested evidence is unknown or ambiguous |
+| Outside current criteria | At least one selected criterion definitely fails, such as research fit below the threshold |
 
 A definite mismatch takes precedence over missing information. All author records remain in the saved result. Unknown inclusion settings and UI filters control visibility, not data retention.
 
@@ -155,15 +159,15 @@ A definite mismatch takes precedence over missing information. All author record
 
 ## 6 Saved runs and the advanced dashboard
 
-The app has two related workspaces with different persistence rules.
+The published dashboard stores reviews and shortlists in the current browser. Optional local research adds saved runs and a source registry with different persistence rules:
 
 | Area | What it stores | Where it lives |
 | --- | --- | --- |
-| Saved mapping run | Input, selected editions, task progress, paper records, research proposals, screening, checkpoints | Shared server D1 and R2 storage for the private Site |
-| Source registry | Plan versions, checks, active pointers, collection references and attempt history | Shared server D1 and R2 storage |
+| Saved mapping run | Input, selected editions, task progress, paper records, research proposals, screening, checkpoints | Local SQLite and object files under `outputs/local/` |
+| Source registry | Plan versions, checks, active pointers, collection references and attempt history | Local SQLite and object files under `outputs/local/` |
 | Advanced dashboard | Local selections, shortlists, manually entered evidence, accepted profile fields, workspace preferences | Browser IndexedDB and localStorage |
 
-In the advanced dashboard, reviewers can inspect proposals and accept supported academic fields individually. Accepted fields are stored as reviewed `academicProfile` data; manually entered evidence retains priority. The separate advanced profile-research queue supports up to 25 selected authors per batch and runs serially while its page is open.
+In the advanced dashboard, reviewers can inspect proposals and accept supported academic fields individually. Accepted fields are stored as reviewed `academicProfile` data; manually entered evidence retains priority. With the optional local research server running, the separate advanced profile-research queue supports up to 25 selected authors per batch and runs serially while its page is open. The published website cannot start these research tasks.
 
 The saved mapping-run profile is read-only. Accepting a field in the advanced dashboard does not update the server-saved run or its Excel workbook. The workbook export reloads the selected saved run. Browser-local review data is also not automatically shared with a teammate or another browser.
 
@@ -171,7 +175,9 @@ Talent Atlas supports research and handoff; it is not an applicant tracking syst
 
 ## 7 What the Excel workbook contains
 
-Download Excel creates a real `.xlsx` workbook in the browser from the selected saved run. It retains all candidate and paper records regardless of the current visible page or filters.
+In the optional local research workflow, Download Excel creates a real `.xlsx` workbook in the browser from the selected saved run. The published snapshot also offers a prebuilt workbook for its checked-in dataset. It retains all candidate and paper records regardless of the current visible page or filters.
+
+The default workbook includes current degree programs, source-stated current program start years, citations, confidence, and review state. It leaves unsupported dates unknown and does not substitute expected graduation years or estimated graduation ranges for enrollment dates. The published workbook covers all 6,847 author groups and 1,200 papers.
 
 | Sheet | What to use it for |
 | --- | --- |
@@ -189,7 +195,7 @@ For handoff, include the run ID, criteria, source-coverage notes, and which prop
 
 ## 8 Progress and recovery
 
-The run page drives repeated advance requests. Each request processes a bounded amount of work; the backend accepts one to three tasks. D1 leases prevent two requests from claiming the same work simultaneously. Leases expire after three minutes so interrupted work can be recovered.
+The run page drives repeated advance requests. Each request processes a bounded amount of work; the backend accepts one to three tasks. Database leases prevent two requests from claiming the same work simultaneously. Leases expire after three minutes so interrupted work can be recovered.
 
 | State or symptom | Meaning and next action |
 | --- | --- |
@@ -217,83 +223,106 @@ The bundled data includes useful examples of honest coverage limits:
 - CoNEXT 2025 uses its official program as a documented fallback source.
 - IMC listings provide author names without institutions, so publication affiliations remain unknown.
 
-Four bundled pilot academic proposals are present. They are proposals, and only eligible recent findings are attached for reuse; their presence does not mean the full snapshot has been researched.
+Research lookups are complete for all 6,847 provisional author groups. The selected public snapshot retains 6,663 research proposals, with 3,799 matched identities, 2,439 cited academic statuses, 521 current degree programs, and 211 current program start years. A completed lookup can still leave an identity or field unknown; all authors remain in the directory. These are source-cited proposals requiring human review, not recruiter-approved facts. The full counts and their definitions are in [`data/published/research-stage-counts.json`](../data/published/research-stage-counts.json).
+
+The original four-profile pilot remains a separate archival download. Eligible recent pilot proposals can be reused by the optional local research workflow; the selected full research publication is explicitly merged into the Pages build. Rebuilding preserves original citation and lookup dates rather than implying new research.
 
 ## 10 The codebase and what each piece is for
 
-Paths below are relative to the `talent-atlas` application directory.
+Paths below are relative to the application directory containing `package.json`. Server and saved-run components are used only by the optional local tools; shared parsers and normalization also prepare the static build.
 
 | Component | Purpose |
 | --- | --- |
 | `shared/catalog.js` | Shared domains, venues, official mappings, connector status, and lifecycle notes |
+| `shared/current-program.js` | Cited current-student program checks and recovery of explicit current-program start years |
 | `worker/index.js` | Worker entry point, static assets, API routing, and response security headers |
 | `worker/api.mjs` | Main API dispatcher, source bootstrap and collection, paper normalization, provisional authors, and lexical research fit |
 | `worker/mapping-plan.mjs` | Deterministic direction matching, conference recommendations, year scope, and criteria validation |
 | `worker/mapping-api.mjs` | Saved-run HTTP routes and integration of planner, collectors, and author research |
-| `worker/mapping-runs.mjs` | Durable task orchestration, leases, checkpoints, retry policy, screening, and graduation planning |
+| `worker/mapping-runs.mjs` | Durable local task orchestration, leases, checkpoints, retry policy, and screening |
+| `worker/published-academic.mjs` | Professional-field publication projection, author linking, and academic-fact coverage |
 | `worker/usenix.mjs` | USENIX listing and citation-metadata parsing |
 | `worker/networking.mjs` | SIGCOMM, CoNEXT, and IMC listing/program parsing and coverage |
 | `worker/source-discovery.mjs` | Model-assisted official-source discovery and restricted declarative extraction |
 | `worker/source-plans.mjs` | Versioned registry, deterministic validation, activation, and protected collection cache |
 | `worker/source-plan-api.mjs` | Source discovery, validation, activation, per-edition collection, and automatic repair integration |
 | `worker/profile-research.mjs` | One-author web research, strict academic schema, identity/citation checks, and evidence freshness handling |
-| `ui/mapping-run.js` | Primary request form, progress driver, saved runs, result search/filters, read-only profiles, and dashboard handoff |
+| `ui/mapping-run.js` | Local request form, progress driver, saved runs, result search/filters, read-only profiles, and dashboard handoff |
 | `ui/app.js` | Advanced dashboard, local workspace persistence, filters, shortlists, evidence, and CSV export |
 | `ui/profile-research.js` | Advanced serial research queue and field-level review controls |
 | `ui/source-plans.js` | Source registry, plan history, validation details, and freshness controls |
 | `ui/mapping-export.js` | Dependency-free Office Open XML workbook creation and browser download |
 | `ui/index.html` and CSS files | App shell, script loading, and visual presentation |
-| `db/schema.ts` and `drizzle/` | D1 tables and versioned SQL migrations |
-| `data/` | Publisher snapshots, source-plan seeds, and pilot academic proposals |
+| `db/schema.ts` and `drizzle/` | Local SQLite tables and versioned SQL migrations |
+| `data/` | Publisher snapshots, source-plan seeds, original pilot, selected academic publication, and research-stage counts |
 | `scripts/` | Local development, collection, verification, seeding, build, and artifact validation |
 | `tests/` | Parser fixtures, evidence checks, source lifecycle, orchestration, API, UI contracts, and export checks |
-| `.openai/hosting.json` | Private Site identity and deployment configuration |
+| `.github/workflows/pages.yml` | GitHub Pages verification, static build, tests, and deployment |
+| `scripts/build-pages.mjs` and `ui/runtime.js` | Static snapshot generation and browser-side snapshot requests |
 
-The sibling `talent-atlas-backend/.sites-checkout` directory is a Sites source checkout, not another backend service to launch. The main app's UI and Worker live together in `talent-atlas`.
+The UI and optional local research modules live together in this application directory. GitHub Pages deploys only the generated `dist-pages/` files; it does not deploy the local server or its database.
 
 ### Server storage tables
 
-`source_plan_versions` holds immutable extraction versions. `source_plan_checks` holds validation reports. `source_plan_heads` identifies the active version for each edition. `source_collection_cache` points to the last successful R2 collection and records the latest attempt separately.
+`source_plan_versions` holds immutable extraction versions. `source_plan_checks` holds validation reports. `source_plan_heads` identifies the active version for each edition. `source_collection_cache` points to the last successful local collection object and records the latest attempt separately.
 
-`mapping_runs` holds input, plan, state, progress, revision, lease, and result-object reference. `mapping_tasks` holds edition/profile tasks, attempts, state, leases, and individual output references. R2 holds the larger JSON objects those records reference.
+`mapping_runs` holds input, plan, state, progress, revision, lease, and result-object reference. `mapping_tasks` holds edition/profile tasks, attempts, state, leases, and individual output references. Local object files hold the larger JSON objects those records reference.
 
 ## 11 Local setup and routine maintenance
 
-Use Node 22.13 or newer. The deployed Worker has no runtime package dependencies; the npm development dependencies support schema tooling. Run commands from the directory containing `package.json`:
+Use Node 22.13 or newer and run commands from the directory containing `package.json`.
+
+### Static dashboard preview
 
 ```sh
-cd talent-atlas
-npm ci
+npm run build
 npm run dev
 ```
 
-Open `http://localhost:4173`. The dev server loads the ignored app `.env`, applies the checked-in migrations to local SQLite, and stores local database and object data under ignored `outputs/local/`. These are development equivalents of production D1 and R2, not connections to hosted production data.
+`build` generates `dist-pages/`. `dev` previews the static dashboard at `http://localhost:4173`. The snapshot build makes no model calls and requires no API key. It preserves original source dates, citation evidence, uncertainty, and proposal review state.
 
-For live profile research, configure `OPENAI_API_KEY` and `OPENAI_RESEARCH_MODEL` on the server. `OPENAI_SOURCE_MODEL` is optional and falls back to the research model for discovery. The model name is configuration; there is no hardcoded runtime default. Use the ignored `.env` locally and the Sites secret/settings store in production. Keep keys out of browser fields, source control, and hosting manifests.
-
-Known source plans, offline snapshot verification, and ordinary app inspection do not require model calls. Missing model configuration is recorded as Connection required when a task needs it.
-
-Use the repository checks when changing code or refreshing bundled data:
+Use these checks for a Pages update:
 
 ```sh
 npm run verify:sources
-npm run build
-npm test
 npm run validate
 ```
 
-`verify:sources` checks saved provenance, counts, identity grouping, and metadata gaps without fetching publishers. `build` embeds the UI, Worker modules, catalog, and snapshots into `dist/server/index.js`. Build before testing because the Worker tests read this generated artifact. The test suite checks implementation behavior with fixtures and mocked services. `validate` checks that the built artifact is valid ESM and exports the Worker handler.
+`verify:sources` checks saved provenance, counts, identity grouping, and metadata gaps without fetching publishers. `validate` runs the Pages build and static UI checks. GitHub Actions publishes the generated output after intended source and data changes are pushed to `main`; see [the publication guide](GITHUB_PAGES.md).
 
-The explicit snapshot refresh commands contact official publisher sites:
+### Optional local research server
+
+```sh
+npm ci
+npm run dev:local
+```
+
+Stop the static preview before using the local research server on the same port. This separate server loads the ignored app `.env`, applies checked-in migrations to local SQLite, and stores database and object data under ignored `outputs/local/`. Its saved runs and source registry stay on your computer and are not automatically published.
+
+For live profile research, configure `OPENAI_API_KEY` and `OPENAI_RESEARCH_MODEL` in `.env`. `OPENAI_SOURCE_MODEL` is optional and falls back to the research model for discovery. The model name is configuration; there is no hardcoded runtime default. Keep keys out of browser fields, source control, and public downloads. Model calls can incur API charges. Known source plans and offline snapshot verification do not require model calls. Missing model configuration is recorded as Connection required when a local task needs it.
+
+For local Worker tooling and the full suite:
+
+```sh
+npm run build:worker
+npm test
+npm run validate:worker
+```
+
+`build:worker` creates `dist/server/index.js` for local checks. Build it before running the complete suite because Worker tests read that artifact. `validate:worker` checks its ESM export. These commands do not deploy a server.
+
+### Refreshing research data
+
+These explicit commands contact official publisher sites:
 
 ```sh
 npm run collect:usenix -- --conferences=osdi,nsdi --years=2024,2025,2026 --output=data/usenix.json
 npm run collect:networking -- --conferences=sigcomm,conext,imc --years=2024,2025,2026 --output=data/networking.json
 ```
 
-After a refresh, inspect coverage and warnings, run verification, and rebuild to include the new snapshot. `node scripts/seed-source-plans.mjs` rebuilds validated registry seeds from previously downloaded official HTML, using `/tmp` by default or a directory supplied with `--html-cache`. It makes no publisher or model calls and is a maintenance action, not a first-run requirement.
+Inspect coverage and warnings after a refresh, verify sources, and rebuild the static snapshot. `node scripts/seed-source-plans.mjs` rebuilds validated registry seeds from previously downloaded official HTML, using `/tmp` by default or a directory supplied with `--html-cache`. It makes no publisher or model calls and is a maintenance action, not a first-run requirement.
 
-For schema changes, update `db/schema.ts`, run `npm run db:generate`, and review the generated SQL and metadata. Do not edit migrations already applied to a database. Hosted publishing applies migrations before updating the Worker; building locally does not deploy the Site.
+For local schema changes, update `db/schema.ts`, run `npm run db:generate`, and review generated SQL and metadata. Do not edit migrations already applied to a local database. GitHub Pages deployment does not use the research database or apply migrations. Only source snapshots and selected publication artifacts enter the public build; raw run data stays local until intentionally prepared for publication.
 
 ## 12 Where to start as a maintainer
 
@@ -306,7 +335,8 @@ For schema changes, update `db/schema.ts`, run `npm run db:generate`, and review
 | Primary workflow or profile display | `ui/mapping-run.js` | `mapping-run-ui.test.mjs` |
 | Advanced evidence review | `ui/app.js`, `ui/profile-research.js` | `ui.test.mjs`, `profile-ui.test.mjs` |
 | Workbook contents or serialization | `ui/mapping-export.js` | `mapping-export.test.mjs` |
-| Build and deployment artifact | `scripts/build.mjs`, Worker entry, hosting manifest | `worker.test.mjs` and `npm run validate` |
+| Static publication and deployment | `scripts/build-pages.mjs`, `ui/runtime.js`, `.github/workflows/pages.yml` | `pages-build.test.mjs`, `static-ui.test.mjs`, and `npm run validate` |
+| Optional local Worker artifact | `scripts/build.mjs`, Worker entry | `worker.test.mjs` and `npm run validate:worker` |
 
 Keep the product's distinctions visible when making changes: collected versus complete, provisional versus verified identity, publication affiliation versus current affiliation, proposed versus reviewed facts, and source-stated dates versus duration estimates. Preserve unknown and nonmatching records so a reviewer can audit how the map was produced.
 

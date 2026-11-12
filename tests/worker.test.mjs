@@ -38,10 +38,9 @@ test('deployed academic research routes expose real proposals and honest model s
  const status=await(await worker.fetch(new Request('https://example.test/api/profile-research/status'))).json();assert.equal(status.configured,false);assert.equal(status.maxBatchSize,25);
  const response=await worker.fetch(new Request('https://example.test/api/enrich',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({candidateId:pilot.profiles[0].candidateId})}));assert.equal(response.status,503);assert.equal((await response.json()).status,'connection_required');
 });
-test('deployed artifact includes every validated source plan and shared-storage declarations',async()=>{
+test('deployed artifact includes every validated source plan and reports local storage availability',async()=>{
  const sourcePlans=await(await worker.fetch(new Request('https://example.test/api/source-plans'))).json();assert.equal(sourcePlans.plans.length,29);assert.ok(sourcePlans.plans.every(row=>row.status==='active'&&row.latestValidation.verdict==='pass'));
  const atc=sourcePlans.plans.find(row=>row.plan.conferenceId==='atc'&&row.plan.year===2026);assert.equal(atc.plan.adapter,'generic-html-v1');assert.equal(atc.latestValidation.observedCount,135);
- const configuration=JSON.parse(await readFile(new URL('../.openai/hosting.json',import.meta.url),'utf8'));assert.equal(configuration.d1,'DB');assert.equal(configuration.r2,'BUCKET');
  const status=await(await worker.fetch(new Request('https://example.test/api/source-plans/status'))).json();assert.equal(status.modelConfigured,false);assert.equal(sourcePlans.storageAvailable,false);
 });
 test('the primary entry point is an end-to-end mapping run with an offline-capable conference plan',async()=>{

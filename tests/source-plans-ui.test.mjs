@@ -40,7 +40,7 @@ async function app({plans=[planRow(),planRow({id:'candidate-2',version:2,status:
 test('registry loads authoritative server versions once and displays shared storage',async()=>{
   const ui=await app();await ui.run('sourcePlansOnData()');
   assert.equal(ui.calls.filter(c=>c.path==='/api/source-plans').length,1);assert.equal(ui.calls.filter(c=>c.body).length,0);
-  const html=ui.run('sourcePlanWorkspace()');assert.match(html,/Shared source registry available/);assert.match(html,/2 versions/);assert.match(html,/Version 1/);assert.match(html,/Version 2/);assert.match(html,/private Site/);
+  const html=ui.run('sourcePlanWorkspace()');assert.match(html,/Shared source registry available/);assert.match(html,/2 versions/);assert.match(html,/Version 1/);assert.match(html,/Version 2/);assert.match(html,/local research server/);
 });
 
 test('unconfigured agent discovery makes no model discovery request',async()=>{

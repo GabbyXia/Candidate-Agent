@@ -1,4 +1,4 @@
-// Portable development bindings. Production uses Sites-managed D1 and R2.
+// Local SQLite and filesystem bindings for optional research tools.
 import { DatabaseSync } from 'node:sqlite';
 import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';

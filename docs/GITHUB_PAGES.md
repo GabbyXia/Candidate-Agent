@@ -4,23 +4,33 @@ Repository: https://github.com/GabbyXia/Candidate-Agent
 
 Site: https://gabbyxia.github.io/Candidate-Agent/
 
-GitHub Pages publishes the static snapshot on the normal `github.io` domain.
+GitHub Pages is the only deployment target. It publishes the static snapshot on the normal `github.io` domain. The retained research server is optional local tooling and is not deployed.
 
 ## What the site contains
 
 The static site publishes the checked-in official paper snapshots, provisional
 author profiles, original source coverage, and dated academic research proposals.
-The Downloads screen includes the complete JSON snapshot, Excel workbook, academic
-research pilot, and validated source plans. Proposals retain their original source
-dates and review state; rebuilding does not imply fresh research.
+The Downloads screen includes the complete JSON snapshot, Excel workbook, selected
+academic research publication, research-stage counts, original academic research
+pilot, and validated source plans. Proposals retain their original source dates
+and review state; rebuilding does not imply fresh research.
+
+The checked-in publication covers 1,200 papers and all 6,847 provisional author
+groups. All 6,847 lookups are complete, with 6,663 retained research proposals,
+2,439 cited academic statuses, 521 current degree programs, and 211 current program
+start years. Completed lookup coverage does not imply that every identity or fact
+was resolved. The original four-profile pilot is a separate archival download.
 
 The directory opens with all collected author records. The publication separately
 reports how many records have academic profile research; missing profile evidence
 does not remove an author from the directory. Optional filters narrow the display.
 
 The interface and default Excel export use the first enrollment year of the
-current degree program. Cited proposal dates remain labeled unreviewed; missing
-or unsupported dates remain Unknown. Historical graduation fields can remain in
+current degree program. A date requires cited current student status, a compatible
+degree, and an explicit enrollment-start statement. Cited proposal dates remain
+labeled unreviewed; missing or unsupported dates remain Unknown. Cited professional
+roles without an established current student program have a separate label.
+Historical graduation fields can remain in
 the archived source JSON, but do not populate the start-year view. This public
 snapshot is separate from local research runs. Only explicitly selected academic
 fact exports are imported; raw run state is never copied automatically.
@@ -37,6 +47,7 @@ server runs.
 It verifies the saved source records, builds with Node 22, checks the static build,
 and deploys the generated `dist-pages/` through GitHub Pages. No API key, npm package
 installation, server, or model connection is required to build the static version.
+`npm run build:pages` remains an explicit alias for the same snapshot build.
 
 The builder adds content versions to scripts, styles, snapshot requests, and
 downloads so browsers load matching files after publication.
@@ -47,7 +58,7 @@ is accessible to visitors at its site URL.
 
 ## Publish updated research
 
-1. Run collection or research in the full local/server application.
+1. Run collection scripts or start the optional local research server with `npm run dev:local`. Review the source evidence and coverage before selecting data for publication.
 2. Update the intended checked-in source snapshots in `data/`. Keep citation dates,
    uncertainty, and review status attached to the results.
 3. For a selected additional downloadable research artifact, follow
@@ -70,8 +81,8 @@ is accessible to visitors at its site URL.
 
    ```sh
    npm run verify:sources
-   npm run build:pages
-   node --test tests/pages-build.test.mjs tests/static-ui.test.mjs
+   npm run build
+   npm run validate
    ```
 
 5. Commit the intended source/data/artifact changes and push to `main`. Watch
@@ -79,7 +90,7 @@ is accessible to visitors at its site URL.
 
 The builder reads only checked-in source data and explicitly selected publication
 files. It does not automatically publish files from a live database, local run,
-browser cache, or the private hosted application's saved runs.
+browser cache, or saved research runs under `outputs/local/`.
 
 ## Keep local files out of Git
 
@@ -95,9 +106,12 @@ or local working directories in that publication directory.
 ## Local preview
 
 ```sh
-npm run build:pages
-python3 -m http.server 4174 --directory dist-pages
+npm run build
+npm run dev
 ```
 
-Open http://localhost:4174. Assets and snapshot requests use relative URLs so the
-same build also works at the GitHub project subpath `/Candidate-Agent/`.
+Open http://localhost:4173. This previews the static snapshot; use
+`npm run dev:local` separately for local collection and model research. Stop the
+static preview before using the local server on the same port. Assets and snapshot
+requests use relative URLs so the same build also works at the GitHub project
+subpath `/Candidate-Agent/`.
