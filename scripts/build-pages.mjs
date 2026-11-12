@@ -32,7 +32,8 @@ async function publicationFiles(root) {
     if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(filename) || names.has(filename.toLowerCase())) throw Error('Published artifact filenames must be unique and contain only letters, numbers, dots, underscores, or hyphens.');
     names.add(filename.toLowerCase());
     if(entry.kind!==undefined&&!['download','academic_profiles'].includes(entry.kind))throw Error('Unknown publication artifact kind.');
-    return { title: String(entry.title || filename), description: String(entry.description || 'Published research artifact.'), filename, kind:entry.kind||'download', type: extname(filename).slice(1).toUpperCase(), content: await readFile(canonicalSource) };
+    if(entry.seedProfilePolicy!==undefined&&(entry.kind!=='academic_profiles'||entry.seedProfilePolicy!=='replace_unchanged_equal'))throw Error('Seed profile policy requires an explicitly selected academic profile snapshot.');
+    return { title: String(entry.title || filename), description: String(entry.description || 'Published research artifact.'), filename, kind:entry.kind||'download', seedProfilePolicy:entry.seedProfilePolicy||null, type: extname(filename).slice(1).toUpperCase(), content: await readFile(canonicalSource) };
   }));
 }
 
@@ -80,7 +81,7 @@ export async function buildPages({ outputDir = resolve(projectRoot, 'dist-pages'
   for(const addition of additions.filter(entry=>entry.kind==='academic_profiles')){
     if(addition.type!=='JSON')throw Error('Academic profile publications must be JSON.');
     const projected=projectAcademicPublication(JSON.parse(addition.content.toString('utf8')));
-    const report=mergeAcademicPublication(bootstrap,projected);researchCheckpoints.push(report);
+    const report=mergeAcademicPublication(bootstrap,projected,{seedProfilePolicy:addition.seedProfilePolicy,seedProfiles:proposals});researchCheckpoints.push(report);
     addition.content=Buffer.from(json(projected));
     addition.description=`${report.completedLookups.toLocaleString('en-US')} completed lookups out of ${report.researchGroups.toLocaleString('en-US')} author groups; ${report.retainedProfiles.toLocaleString('en-US')} retained source-cited proposals. ${report.complete?'Lookup coverage is complete; unsupported facts remain unknown.':'Partial lookup coverage; unsupported facts remain unknown.'}`;
   }

@@ -1,0 +1,11 @@
+import test from'node:test';import assert from'node:assert/strict';
+import{currentProgramFacts}from'../shared/current-program.js';
+// Source-language parser controls only. These sentences are not profile facts
+// and are never published; the anchor is an existing accepted-paper record.
+function facts(quote,year=2025){const field=value=>({value,sourceIds:['row'],asOf:null,confidence:'medium',basis:'source_stated'}),id='author:252cde95d2f7ecbb',paper='usenix:osdi:2026:zheng';return currentProgramFacts({id,paperIds:[paper],academicResearch:{candidateId:id,identity:{status:'matched',matchedPaperIds:[paper],sourceIds:['row']},academic:{currentStatus:field('PhD student'),degree:field('Doctorate'),programStartYear:field(year)},sources:[{id:'row',url:'https://ipads.sjtu.edu.cn/zh/pub/members/bin_xu/',evidenceExcerpt:quote}]}},{currentYear:2026});}
+test('traditional-script completed-degree qualifiers cannot become current enrollment',()=>{for(const quote of['2025.09 - 至今，某大學，博士生（已畢業）','2025.09 - 至今，某大學，已結束博士生','2025.09 - 至今，某大學，往屆博士生'])assert.equal(facts(quote).programStartYear,null,quote);});
+test('traditional visiting and employment intervals stay separate from degree entry',()=>{for(const term of['訪學','訪問','實習','交換','入職','任職'])assert.equal(facts('2025.09 - 至今，某大學，'+term+'博士生').programStartYear,null,term);});
+test('traditional supervisor titles do not become the candidates student program',()=>{for(const quote of['2025.09 - 至今，某大學，博士生 導師','2025.09 - 至今，某大學，博士生 指導教師','2025.09 - 至今，某大學，指導博士生','2025.09 - 至今，某大學，導師 博士生'])assert.equal(facts(quote).programStartYear,null,quote);});
+test('traditional planned applications are not an actual ongoing degree',()=>{for(const term of['擬','申請','計劃','將於','即將','準備','未來'])assert.equal(facts('2025.09 - 至今，某大學，'+term+'博士生').programStartYear,null,term);});
+test('traditional award, project and paper periods are not programme enrollment',()=>{for(const term of['獎學金','獲獎','項目','課題','論文','會議','論壇','活動'])assert.equal(facts('2025.09 - 至今，某大學，'+term+'博士生').programStartYear,null,term);});
+test('traditional other-degree ambiguity rejects a reassigned doctoral year while actual entry stays literal',()=>{assert.equal(facts('2025.09 - 至今，某大學，碩士生，博士生').programStartYear,null);assert.equal(facts('2025.09 - 至今，某大學，學士，博士生').programStartYear,null);assert.equal(facts('2025.09 - 至今，上海交通大学计算机学院，博士生').programStartYear,2025);});

@@ -59,7 +59,7 @@ test('Pages build retains the complete dated research snapshot and works below a
     assert.equal(result.researchedProfiles, expectedProfileIds.size);
     assert.equal(bootstrap.publication.researchedProfiles, expectedProfileIds.size);
     assert.equal(result.researchCheckpoints[0].completedLookups,selected.checkpoint.completedLookups);
-    assert.equal(result.researchCheckpoints[0].researchGroups,5433);
+    assert.equal(result.researchCheckpoints[0].researchGroups,6847);
     assert.equal(result.researchCheckpoints[0].complete,selected.checkpoint.complete);
     for (const candidate of proposals) {
       assert.ok(expectedProfileIds.has(candidate.id));

@@ -3,8 +3,15 @@
     {
       "file": "network-academic-profiles.json",
       "kind": "academic_profiles",
-      "title": "Networking academic research checkpoint",
-      "description": "Source-cited public academic facts from the saved networking checkpoint. Original query dates, partial coverage and unknown fields remain explicit."
+      "seedProfilePolicy": "replace_unchanged_equal",
+      "title": "Academic background research",
+      "description": "Source-cited academic facts after the bounded research stages."
+    },
+    {
+      "file": "research-stage-counts.json",
+      "kind": "download",
+      "title": "Pipeline counts by conference and stage",
+      "description": "Paper, author-group and lookup-stage counts; unknown facts remain unknown."
     }
   ]
 }

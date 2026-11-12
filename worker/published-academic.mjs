@@ -82,7 +82,9 @@ export function projectAcademicPublication(publication){
 }
 
 /** Link only selected, professional projections to known author/paper records. */
-export function mergeAcademicPublication(bootstrap,input){
+export function mergeAcademicPublication(bootstrap,input,{seedProfilePolicy=null,seedProfiles=null}={}){
+ if(seedProfilePolicy!==null&&seedProfilePolicy!=='replace_unchanged_equal')fail('unknown seed profile policy.');
+ if(seedProfilePolicy==='replace_unchanged_equal'&&!(seedProfiles instanceof Map))fail('seed profile records are required.');
  const publication=projectAcademicPublication(input),checkpoint=publication.checkpoint;
  const candidates=new Map(bootstrap.candidates.map(c=>[c.id,c])),allPapers=new Set(bootstrap.papers.map(p=>p.id)),seen=new Set();let linked=0,updated=0;
  for(const entry of publication.profiles){
@@ -91,7 +93,9 @@ export function mergeAcademicPublication(bootstrap,input){
   const research=projectAcademicResearch(entry.candidateId,entry.paperIds,entry.research);
   if(research.identity.matchedPaperIds.some(id=>!candidate.paperIds?.includes(id)))fail('identity anchor belongs to a different author group.');
   linked++;const existing=candidate.academicResearch,existingTime=Date.parse(existing?.queriedAt),incomingTime=Date.parse(research.queriedAt);
-  if(existing&&(!Number.isFinite(existingTime)||existingTime>=incomingTime))continue;
+  const seed=seedProfiles instanceof Map?seedProfiles.get(candidate.id):null;
+  const replaceEqualSeed=seedProfilePolicy==='replace_unchanged_equal'&&existing&&seed&&Number.isFinite(existingTime)&&existingTime===incomingTime&&!candidate.evidence&&!candidate.academicProfile&&existing.requiresHumanReview===true&&!existing.reviewedAt&&JSON.stringify(existing)===JSON.stringify(seed)&&JSON.stringify(existing)!==JSON.stringify(research);
+  if(existing&&(!Number.isFinite(existingTime)||existingTime>=incomingTime)&&!replaceEqualSeed)continue;
   candidate.academicResearch=research;updated++;
  }
  return {cohortId:publication.cohortId,checkpointAt:checkpoint.at,complete:checkpoint.complete===true,sourcePapers:checkpoint.papers,researchGroups:checkpoint.authorRecords,completedLookups:checkpoint.completedLookups,retainedProfiles:checkpoint.retainedProfiles,pendingLookups:checkpoint.pendingLookups,inProgress:checkpoint.inProgress,rateLimitedLookups:checkpoint.rateLimitedLookups,uncertainLookups:checkpoint.uncertainLookups,pausedLookups:checkpoint.pausedLookups,linkedProfiles:linked,updatedProfiles:updated};

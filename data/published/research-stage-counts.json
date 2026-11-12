@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 1,
+  "kind": "professional_research_numbers",
+  "asOf": "2026-11-12T07:45:05.561Z",
+  "scope": {
+    "papers": 1200,
+    "authorOccurrences": 8869,
+    "namedAuthorOccurrences": 8868,
+    "distinctNormalizedAuthorNames": 5649,
+    "provisionalAuthorGroups": 6847,
+    "verifiedDistinctPeople": null,
+    "anonymousPublisherOccurrences": 1,
+    "distinctNormalizedNameStrings": 5649
+  },
+  "conferenceYear": [
+    {
+      "conferenceId": "conext",
+      "year": 2024,
+      "papers": 40,
+      "authorOccurrences": 209,
+      "provisionalAuthorGroups": 198
+    },
+    {
+      "conferenceId": "conext",
+      "year": 2025,
+      "papers": 50,
+      "authorOccurrences": 303,
+      "provisionalAuthorGroups": 284
+    },
+    {
+      "conferenceId": "conext",
+      "year": 2026,
+      "papers": 60,
+      "authorOccurrences": 324,
+      "provisionalAuthorGroups": 297
+    },
+    {
+      "conferenceId": "imc",
+      "year": 2024,
+      "papers": 55,
+      "authorOccurrences": 302,
+      "provisionalAuthorGroups": 302
+    },
+    {
+      "conferenceId": "imc",
+      "year": 2025,
+      "papers": 72,
+      "authorOccurrences": 368,
+      "provisionalAuthorGroups": 367
+    },
+    {
+      "conferenceId": "imc",
+      "year": 2026,
+      "papers": 77,
+      "authorOccurrences": 359,
+      "provisionalAuthorGroups": 359
+    },
+    {
+      "conferenceId": "nsdi",
+      "year": 2024,
+      "papers": 112,
+      "authorOccurrences": 827,
+      "provisionalAuthorGroups": 761
+    },
+    {
+      "conferenceId": "nsdi",
+      "year": 2025,
+      "papers": 83,
+      "authorOccurrences": 620,
+      "provisionalAuthorGroups": 557
+    },
+    {
+      "conferenceId": "nsdi",
+      "year": 2026,
+      "papers": 150,
+      "authorOccurrences": 1226,
+      "provisionalAuthorGroups": 1053
+    },
+    {
+      "conferenceId": "osdi",
+      "year": 2024,
+      "papers": 53,
+      "authorOccurrences": 379,
+      "provisionalAuthorGroups": 351
+    },
+    {
+      "conferenceId": "osdi",
+      "year": 2025,
+      "papers": 53,
+      "authorOccurrences": 376,
+      "provisionalAuthorGroups": 362
+    },
+    {
+      "conferenceId": "osdi",
+      "year": 2026,
+      "papers": 136,
+      "authorOccurrences": 1120,
+      "provisionalAuthorGroups": 996
+    },
+    {
+      "conferenceId": "sigcomm",
+      "year": 2024,
+      "papers": 62,
+      "authorOccurrences": 520,
+      "provisionalAuthorGroups": 475
+    },
+    {
+      "conferenceId": "sigcomm",
+      "year": 2025,
+      "papers": 88,
+      "authorOccurrences": 921,
+      "provisionalAuthorGroups": 781
+    },
+    {
+      "conferenceId": "sigcomm",
+      "year": 2026,
+      "papers": 109,
+      "authorOccurrences": 1015,
+      "provisionalAuthorGroups": 921
+    }
+  ],
+  "lookupCoverage": {
+    "at": "2026-11-12T07:45:05.561Z",
+    "complete": true,
+    "authorRecords": 6847,
+    "completedLookups": 6847,
+    "pendingLookups": 0,
+    "inProgress": 0,
+    "rateLimitedLookups": 0,
+    "uncertainLookups": 0,
+    "pausedLookups": 0,
+    "retainedProfiles": 6663,
+    "papers": 1200
+  },
+  "facts": {
+    "retainedProfiles": 6663,
+    "matchedIdentities": 3799,
+    "currentAffiliations": 2947,
+    "academicStatuses": 2439,
+    "specificStatuses": 2395,
+    "researchInterests": 2219,
+    "currentDegrees": 521,
+    "currentProgramStarts": 211
+  },
+  "phases": {
+    "firstPass": {
+      "completed": 6721,
+      "uncertain": 85,
+      "paused": 41,
+      "pending": 0,
+      "inProgress": 0,
+      "historicalAttemptAggregate": 1178,
+      "historicalAttemptAggregateCountedOnce": true,
+      "newDurableAuthorAttempts": {
+        "network": 4364,
+        "osdi": 1413,
+        "total": 5777
+      }
+    },
+    "boundedRecovery": {
+      "targets": 916,
+      "reservedAuthorAttempts": 916,
+      "returnedProfiles": 732,
+      "returnedWithoutProfile": 184,
+      "held": 0,
+      "ready": 0,
+      "inProgress": 0,
+      "effectiveCompletedUniqueAuthors": 6847
+    },
+    "nativeIdentity": {
+      "approvedProfiles": 15,
+      "providerAuthorAttempts": 0
+    },
+    "boundedFieldRefinement": {
+      "targets": 1865,
+      "reservedAuthorAttempts": 1865,
+      "states": {
+        "no_new_facts": 1194,
+        "staged_refinement": 82,
+        "held_proposal": 369,
+        "held_transport_unknown": 28,
+        "held_invalid_output": 185,
+        "held_interrupted": 4,
+        "held_rate_limited": 3
+      },
+      "acceptedFields": 117,
+      "changedAuthorGroups": 98,
+      "cachedCitedDerivations": 16,
+      "stagedAuthorRecords": 82,
+      "authorsWithAcceptedNewFields": 82,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "changedAuthorGroupDefinition": "authors_with_accepted_fields_plus_disjoint_original_cached_derivations",
+      "savedRateLimitedStateInterpretation": {
+        "savedStateCount": 3,
+        "observedGateway429InThose": 0,
+        "actualGatewayHttpStatus": 200,
+        "nativeSearchAvailabilityTimeouts": 3
+      },
+      "olderStatusOnlyTransportCausesRemainUnknown": true
+    },
+    "postpassSourceDerived": {
+      "changedAuthorGroups": 64,
+      "byMethod": {
+        "cached_cited_year": {
+          "changedAuthorGroups": 17,
+          "fields": 17,
+          "roleFields": 0,
+          "degreeFields": 0,
+          "startYearFields": 17,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "literal_current_role_quote": {
+          "changedAuthorGroups": 37,
+          "fields": 37,
+          "roleFields": 37,
+          "degreeFields": 0,
+          "startYearFields": 0,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "root_approved_native_identity_bound_role": {
+          "changedAuthorGroups": 2,
+          "fields": 2,
+          "roleFields": 2,
+          "degreeFields": 0,
+          "startYearFields": 0,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "root_approved_native_current_doctoral_entry": {
+          "changedAuthorGroups": 2,
+          "fields": 6,
+          "roleFields": 2,
+          "degreeFields": 2,
+          "startYearFields": 2,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "root_approved_additional_current_student": {
+          "changedAuthorGroups": 3,
+          "fields": 9,
+          "roleFields": 3,
+          "degreeFields": 3,
+          "startYearFields": 3,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "root_approved_native_current_postdoctoral_role": {
+          "changedAuthorGroups": 1,
+          "fields": 1,
+          "roleFields": 1,
+          "degreeFields": 0,
+          "startYearFields": 0,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        },
+        "generic_current_status_specificity": {
+          "changedAuthorGroups": 2,
+          "fields": 2,
+          "roleFields": 2,
+          "degreeFields": 0,
+          "startYearFields": 0,
+          "providerAuthorAttempts": 0,
+          "providerHttpRequests": 0
+        }
+      },
+      "providerAuthorAttempts": 0,
+      "providerHttpRequests": 0,
+      "sourceFactsOnly": true,
+      "originalOutcomesUnchanged": true
+    }
+  },
+  "unknownFactsAreNotCompletedAuthorFilters": true,
+  "authorPaperAssociations": {
+    "mode": "canonical_source_metadata_same_exact_ids",
+    "authorGroupsWithAdditionalPaperLinks": 204,
+    "additionalAuthorPaperLinks": 292,
+    "conferenceYearAuthorGroupCountsAreNotAdditive": true
+  },
+  "providerUsage": {
+    "schemaVersion": 1,
+    "kind": "saved_new_provider_usage",
+    "stages": {
+      "networkFirstPass": {
+        "reservedAuthorAttempts": 4364,
+        "savedUsageRecords": 4364,
+        "missingUsageRecords": 0,
+        "duplicateAuditRecordsDeduplicated": 0,
+        "observedProviderHttpRequests": 12300,
+        "observedInputTokens": 178397342,
+        "observedOutputTokens": 2659683,
+        "observedCachedInputTokens": 19316864,
+        "reportedRejectedRequests": 0,
+        "reportedUncertainRequests": 10,
+        "authorAttemptsWithoutProviderRequestCount": 0,
+        "authorAttemptsWithoutInputTokenCount": 0,
+        "authorAttemptsWithoutOutputTokenCount": 0,
+        "cachedInputTokensAreSubsetOfInputTokens": true,
+        "observedCountersDoNotResolveUncertainBilling": true
+      },
+      "osdiFirstPass": {
+        "reservedAuthorAttempts": 1413,
+        "savedUsageRecords": 1413,
+        "missingUsageRecords": 0,
+        "duplicateAuditRecordsDeduplicated": 0,
+        "observedProviderHttpRequests": 3888,
+        "observedInputTokens": 55230604,
+        "observedOutputTokens": 872973,
+        "observedCachedInputTokens": 5828992,
+        "reportedRejectedRequests": 0,
+        "reportedUncertainRequests": 0,
+        "authorAttemptsWithoutProviderRequestCount": 0,
+        "authorAttemptsWithoutInputTokenCount": 0,
+        "authorAttemptsWithoutOutputTokenCount": 0,
+        "cachedInputTokensAreSubsetOfInputTokens": true,
+        "observedCountersDoNotResolveUncertainBilling": true
+      },
+      "boundedRecovery": {
+        "reservedAuthorAttempts": 916,
+        "savedUsageRecords": 916,
+        "missingUsageRecords": 0,
+        "duplicateAuditRecordsDeduplicated": 0,
+        "observedProviderHttpRequests": 3281,
+        "observedInputTokens": 48845043,
+        "observedOutputTokens": 724082,
+        "observedCachedInputTokens": 5668992,
+        "reportedRejectedRequests": 0,
+        "reportedUncertainRequests": 0,
+        "authorAttemptsWithoutProviderRequestCount": 0,
+        "authorAttemptsWithoutInputTokenCount": 0,
+        "authorAttemptsWithoutOutputTokenCount": 0,
+        "cachedInputTokensAreSubsetOfInputTokens": true,
+        "observedCountersDoNotResolveUncertainBilling": true
+      },
+      "boundedFieldRefinement": {
+        "reservedAuthorAttempts": 1865,
+        "savedUsageRecords": 1861,
+        "missingUsageRecords": 4,
+        "duplicateAuditRecordsDeduplicated": 0,
+        "observedProviderHttpRequests": 7245,
+        "observedInputTokens": 114706130,
+        "observedOutputTokens": 1415133,
+        "observedCachedInputTokens": 14679424,
+        "reportedRejectedRequests": 0,
+        "reportedUncertainRequests": 27,
+        "authorAttemptsWithoutProviderRequestCount": 5,
+        "authorAttemptsWithoutInputTokenCount": 5,
+        "authorAttemptsWithoutOutputTokenCount": 5,
+        "cachedInputTokensAreSubsetOfInputTokens": true,
+        "observedCountersDoNotResolveUncertainBilling": true
+      }
+    },
+    "totals": {
+      "reservedAuthorAttempts": 8558,
+      "observedProviderHttpRequests": 26714,
+      "observedInputTokens": 397179119,
+      "observedOutputTokens": 5671871,
+      "observedCachedInputTokens": 45494272,
+      "authorAttemptsWithoutProviderRequestCount": 5,
+      "authorAttemptsWithoutInputTokenCount": 5,
+      "authorAttemptsWithoutOutputTokenCount": 5
+    },
+    "nativeIdentityGatewayAuthorAttempts": 0,
+    "nativeIdentityGatewayProviderRequests": 0,
+    "historical": {
+      "authorAttemptAggregate": 1178,
+      "perAttemptUsageAvailable": false,
+      "providerHttpRequests": null,
+      "inputTokens": null,
+      "outputTokens": null,
+      "includedInNewUsageTotals": false
+    },
+    "providerHttpRequestsAreNotAuthorAttempts": true,
+    "cachedInputTokensAreSubsetAndNotAdditive": true,
+    "onlySavedNumericCounters": true
+  },
+  "studentDateCoverage": {
+    "studentsWithSourceCitedStatus": 558,
+    "citedStartYearsAmongThose": 211,
+    "missingStartYearAmongThose": 347,
+    "currentDegreesAmongThose": 521,
+    "noCurrentStudentProgramEstablishedFromCitedRole": 1837,
+    "sourceCitedNonGenericRoles": 2395,
+    "nonStudentRoleLabel": "No current student program established from the cited professional role",
+    "allAuthorRecordsRemainVisible": true
+  },
+  "fieldInvocationOutcomes": [
+    {
+      "name": "segment-01",
+      "code": "initial_field_current_program_lookup",
+      "reservedAuthorAttempts": 72,
+      "dispatchedAuthorCallbacks": 71,
+      "stagedAuthorRecords": 0,
+      "authorsWithAcceptedNewFields": 0,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {},
+      "terminalOutcomes": {
+        "held_interrupted": 1,
+        "held_proposal": 3,
+        "held_transport_unknown": 1,
+        "no_new_facts": 67
+      }
+    },
+    {
+      "name": "segment-02",
+      "code": "forward_source_format_and_audit",
+      "reservedAuthorAttempts": 565,
+      "dispatchedAuthorCallbacks": 563,
+      "stagedAuthorRecords": 22,
+      "authorsWithAcceptedNewFields": 22,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 9,
+        "degree": 6,
+        "currentStatus": 12
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 2,
+        "held_invalid_output": 48,
+        "held_proposal": 114,
+        "held_transport_unknown": 11,
+        "no_new_facts": 368,
+        "staged_refinement": 22
+      }
+    },
+    {
+      "name": "segment-03",
+      "code": "requested_field_prompt_focus",
+      "reservedAuthorAttempts": 534,
+      "dispatchedAuthorCallbacks": 533,
+      "stagedAuthorRecords": 26,
+      "authorsWithAcceptedNewFields": 26,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 7,
+        "degree": 12,
+        "currentStatus": 26
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 1,
+        "held_invalid_output": 64,
+        "held_proposal": 113,
+        "held_transport_unknown": 7,
+        "no_new_facts": 323,
+        "staged_refinement": 26
+      }
+    },
+    {
+      "name": "segment-04",
+      "code": "lower_provider_concurrency",
+      "reservedAuthorAttempts": 267,
+      "dispatchedAuthorCallbacks": 267,
+      "stagedAuthorRecords": 11,
+      "authorsWithAcceptedNewFields": 11,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 1,
+        "degree": 4,
+        "currentStatus": 11
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 0,
+        "held_invalid_output": 32,
+        "held_proposal": 57,
+        "held_transport_unknown": 5,
+        "no_new_facts": 162,
+        "staged_refinement": 11
+      }
+    },
+    {
+      "name": "segment-05",
+      "code": "provider_outcome_audit_and_native_bridge_timeout",
+      "reservedAuthorAttempts": 148,
+      "dispatchedAuthorCallbacks": 148,
+      "stagedAuthorRecords": 9,
+      "authorsWithAcceptedNewFields": 9,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 2,
+        "degree": 3,
+        "currentStatus": 9
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 0,
+        "held_invalid_output": 13,
+        "held_proposal": 28,
+        "held_rate_limited": 3,
+        "held_transport_unknown": 2,
+        "no_new_facts": 93,
+        "staged_refinement": 9
+      }
+    },
+    {
+      "name": "segment-06",
+      "code": "same_code_ready_only_continuation",
+      "reservedAuthorAttempts": 279,
+      "dispatchedAuthorCallbacks": 279,
+      "stagedAuthorRecords": 14,
+      "authorsWithAcceptedNewFields": 14,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 0,
+        "degree": 1,
+        "currentStatus": 14
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 0,
+        "held_invalid_output": 28,
+        "held_proposal": 54,
+        "held_rate_limited": 0,
+        "held_transport_unknown": 2,
+        "no_new_facts": 181,
+        "staged_refinement": 14
+      }
+    },
+    {
+      "name": "final-remainder",
+      "code": "same_code_ready_only_continuation",
+      "reservedAuthorAttempts": 0,
+      "dispatchedAuthorCallbacks": 0,
+      "stagedAuthorRecords": 0,
+      "authorsWithAcceptedNewFields": 0,
+      "correctiveOnlyStagedAuthorRecords": 0,
+      "stagedFields": {
+        "programStartYear": 0,
+        "degree": 0,
+        "currentStatus": 0
+      },
+      "terminalOutcomes": {
+        "held_interrupted": 0,
+        "held_invalid_output": 0,
+        "held_proposal": 0,
+        "held_rate_limited": 0,
+        "held_transport_unknown": 0,
+        "no_new_facts": 0,
+        "staged_refinement": 0
+      }
+    }
+  ],
+  "candidateFreeHealthProbe": {
+    "candidateFreeRequests": 1,
+    "inputTokens": 7,
+    "outputTokens": 1,
+    "totalTokens": 8,
+    "authorAttempts": 0,
+    "includedInAuthorAttemptCounters": false
+  },
+  "remainingGenericSourceCitedStatuses": 44,
+  "allAuthorRecordsRemainVisible": true
+}
